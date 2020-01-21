@@ -1,27 +1,37 @@
 # Section 1: Familiarity with the Embed SDK
 
-create your .env
+Time: 10 minutes
 
-```
+## Configuring your setup
+Now that you've got a pared down version of the EmbedSDK installed; you will need to configure it to talk to your Looker instance. In this example we are going to use environment variables and configurations in javascript.
+
+### .env: Environment variables
+
+On your command line; rename .env.example to .env. ```
 mv .env.example .env
 ```
 
-Navigate to your .env and fill in your API Key and Secret
+The Embed SDK uses `dotenv` a common Node package that will look for a `.env` and load them up for you.  For light reading on environment variables you can read [this article](https://medium.com/chingu/an-introduction-to-environment-variables-and-how-to-use-them-f602f66d15fa).
 
+In short, we use environment variables as a way to configure the server to store necessary information **on startup** like the host name and API credentials.
 
-On your command line install all the packages and start the server
+Navigate to your .env and fill in your API id and secret in `LOOKERSDK_CLIENT_ID`, `LOOKESDK_CLIENT_SECRET`, `LOOKERSDK_BASE_URL`, and `LOOKER_EMBED_HOST`. If you don't have API credentials yet, log into your Looker instance and follow the directions [here](https://docs.looker.com/admin-options/settings/users#api3_keys). For the base url, follow the format as in the example. embed host without the https and base url with https and API port.
+
+Now that the .env is configured, lets start up the server.
 
 ```
 npm install
+// Fix String Decoder bug instructions?
 npm start
 
 ```
-Webpage pops up, but there is nothing on it.
+
+Webpage pops up, but there is nothing on it besides the header. Lets start configuring the frontend configurations.
 
 
-###  demo_config.ts
+###  demo_config.ts: Frontend Configs
 
-change your demo_config.ts
+Open up the `demo_config.ts` file change your lookerHost to XX
 
 ```js
 // The address of your Looker instance. Required.
@@ -30,12 +40,14 @@ export const lookerHost = 'saleseng.dev.looker.com'
 export const dashboardId = 715
 
 ```
+Both of these configurations are used by the EmbedSDK to create an SSO URL ([docs](https://docs.looker.com/reference/embedding/sso-embed)) for an application user which will see Looker dashboards, looks and explores.
 
-Changed the default dashboard on load and we're in business. But its tiny.
+Hot reload is turned on, if you change a configuration on the frontend, you should see that change made immediately. You should see your dashboard, but its tiny.
 
-XX: Here is an intro to CSS, go to line XX
+## CSS Intro
+An important part of web development is styling the pages and how they interact with your browser. The base of it being how elements are sized, shaped, positioned and styled through CSS. We have a very tiny dashboard because it has not been told to be bigger. We will use CSS for that
 
-In `index.html` the style block
+In `index.html` there is a style block that looks like
 
 ```
   <style type="text/css">
@@ -44,6 +56,9 @@ In `index.html` the style block
     }
   </style>
 ```
+
+Lets replace that with this.
+
 
 ```
   <style type="text/css">
@@ -62,26 +77,27 @@ In `index.html` the style block
   </style>
 ```
 
+Save the changes and navigate to your dashboard. The above CSS says the element with an ID of `demo-dashboard` will have a height of 90% and width of 90% (relative to its parent) and its margins will be auto sized. This gives it more space on the page and centered. Our dashboard is then being embedded into the element with a class of `looker-embed` (more on this later in the EmbedSDK object). We are telling it to take up 100% of its parent, `demo-dashboard`. 
+
 And we have a normal sized dashboard :party:
 
 
-
-**Note:**
-
-Lets walkthrough how this happens:
+Lets walkthrough what exactly is happening to make this work:
 
 1. In `demo.ts` on line XX, you can see `LookerEmbedSDK.init(lookerHost, '/auth')`. This tells the Embed SDK that I'm going to use the lookerHost variable from `demo_config.ts` and the `/auth` API endpoint to generate an SSO embed URL
 2. Then on line XX, `LookerEmbedSDK.createDashboardWithId(dashboardId)` is the start of the Embed SDK where we instantiate a dashboard via the dashboardId variable from `demo_config.ts`.
 3. The `.build()` and  `.connect()` then use the dashboardId and lookerHost and send it to the `/auth` endpoint to generate the SSO embed URL.
 4. The `/auth` endpoint is a server thats running on your laptop that simulates a backend service yoru customers may have in production. We send a request to the backend asking for an SSO embed URL; you can find it in `webpack-devserver.config.js` on line XX.
 5. This takes API receives from the generated URL from the Embed SDK (`/embed/dashboards/715?embed_doman=...`) and the host from `demo_config.ts` and the user from `demo_user.json` and passes it to a function called `createSignedUrl()`
-6. `createSignedUrl()` can be found in `auth_utils/auth_utils.js` and uses our new Typescript/JS SDK to create an API session and create the signed embed url to send back to the browser. The new API SDK will log us in automatically using our environment variables we placed in `.env`; all thats needed after setup is `const sso_obj = await sdk.ok(sdk.create_sso_embed_url(sso_url_params))`. Wait we're using the API for this? More on this in section 4.
+6. `createSignedUrl()` can be found in `auth_utils/auth_utils.js` and uses our new Typescript/JS SDK to create an API session and create the signed embed url to send back to the browser. The new API SDK will log us in automatically using our environment variables we placed in `.env`; all thats needed after setup is `const sso_obj = await sdk.ok(sdk.create_sso_embed_url(sso_url_params))`. Wait we're using the API for this? More on this in Section 4.
 7. The signed url will then be put into the `src` property of an iframe. By having the line `.appendTo('#dashboard')`, the iframe will placed in the element that has an id of `dashboard`; `<div id="dashboard"></div>`.
+8. The dashboard is also being applied with a classname of `looker-embed` through the line `looker-embed` which sizes it appropriately on the page.
 
+There is A LOT happening here with just a few lines of configuration. That is the baseline of what the EmbedSDK is great at, with just a few lines of configuration, you can provide advanced capabilities of the Looker embed without going into  the complexities of the code underneath. 
 
 
 ### Change the user in demo/demo_user.json
-Navigate to the `demo_user.json` file, here we are going to change the user_name and their permissions.
+There is one other configuration piece, who this user is and what attributes to they have. Navigate to the `demo_user.json` file, here we are going to change the user_name and their permissions.
 
 **Add your own external\_user\_id in your code; e.g., yourfirstname-yourlastname-567** 
 
@@ -121,9 +137,11 @@ Navigate to the `demo_user.json` file, here we are going to change the user_name
 
 ```
 
-This file does not live update like the others since demo_user.json is picked up only on `npm start`; kill the terminal session `control+c` and `npm start` again.
+This file does not live update like the others since demo_user.json is picked up only on `npm start`; kill the terminal session `control+c` and `npm start` again. 
 
 Changing the json file gave the user more permissions like the ability to explore from the dashboard we embedded. Check to make sure you can explore.
 
+This is similar to an environment variable in our context because only our server is using this information; we don't want the user to be able to choose their external_group_id and user_attributes. 
 
+Now everything is configured and ready for us to start playing with configuring properties for the EmbedSDK.
 

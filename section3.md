@@ -94,7 +94,7 @@ This is the first time we're making an API call in the application so this is fl
 5. The SDK now has an access_token and will try to run the `me()`.
 6. We use `console.log(me)` to output it to the console in your browser; open up your developer tools `View > Developer > Javascript Console` or `Cmd+Option+J`
 
-You should see the name of your user in the Javascript console. console.log is an easy way to check the value of a variable while debugging our trying to understand whats happening in your code. There are other, more sophisticated ways like [breakpoints](https://developers.google.com/web/tools/chrome-devtools/javascript/breakpoints), but `console.log()` should be more than adequate for now.
+You should see the name of your user in the Javascript console. console.log is an easy way to check the value of a variable while debugging our trying to understand whats happening in your code. There are other, more sophisticated ways like [breakpoints](https://developers.google.com/web/tools/chrome-devtools/javascript/breakpoints), but `console.log()` is more than adequate for now.
 
 
 

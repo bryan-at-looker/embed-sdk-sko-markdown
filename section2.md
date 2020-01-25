@@ -36,13 +36,13 @@ Changing the theme: Can I change the CSS, colors, font?
 
 Add this to the LookerEmbedSDK above `.build()`
 ```
-.withTheme('currency_white')
+.withTheme('sko')
 ```
 
 Bonus: Add in a special theme for this user's external group_id. Change `withTheme()` to
 
 ```
-.withTheme( (user.external_group_id == 'customerABC') ? 'dialpad' : 'currency_white' )
+.withTheme( (user.external_group_id == 'customerABC') ? 'sko' : '' )
 ```
 The logic above says:
 > If external_group_id == customerABC then display dialpad theme, else use currency_white theme

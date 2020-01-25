@@ -37,7 +37,7 @@ Open up the `demo_config.ts` file change your lookerHost to XX
 // The address of your Looker instance. Required.
 export const lookerHost = 'sko2020.dev.looker.com'
 // A dashboard that the user can see. Set to 0 to disable dashboard.
-export const dashboardId = 2
+export const dashboardId = 5
 
 ```
 Both of these configurations are used by the EmbedSDK to create an SSO URL ([docs](https://docs.looker.com/reference/embedding/sso-embed)) for an application user which will see Looker dashboards, looks and explores.

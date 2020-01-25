@@ -21,7 +21,9 @@ Now that the .env is configured, lets start up the server.
 
 ```
 npm install
-// Fix String Decoder bug instructions?
+// fix the bug for StringDecoder in readable-stream
+awk '{gsub(/: StringDecoder/,": any")}1' ./node_modules/@types/readable-stream/index.d.ts > tmp.txt && mv ./tmp.txt ./node_modules/@types/readable-stream/index.d.ts
+echo '127.0.0.1 embed.demo' | sudo tee -a /etc/hosts
 npm start
 
 ```

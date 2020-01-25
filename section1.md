@@ -35,9 +35,9 @@ Open up the `demo_config.ts` file change your lookerHost to XX
 
 ```js
 // The address of your Looker instance. Required.
-export const lookerHost = 'saleseng.dev.looker.com'
+export const lookerHost = 'sko2020.dev.looker.com'
 // A dashboard that the user can see. Set to 0 to disable dashboard.
-export const dashboardId = 715
+export const dashboardId = 2
 
 ```
 Both of these configurations are used by the EmbedSDK to create an SSO URL ([docs](https://docs.looker.com/reference/embedding/sso-embed)) for an application user which will see Looker dashboards, looks and explores.
@@ -77,7 +77,7 @@ Lets replace that with this.
   </style>
 ```
 
-Save the changes and navigate to your dashboard. The above CSS says the element with an ID of `demo-dashboard` will have a height of 90% and width of 90% (relative to its parent) and its margins will be auto sized. This gives it more space on the page and centered. Our dashboard is then being embedded into the element with a class of `looker-embed` (more on this later in the EmbedSDK object). We are telling it to take up 100% of its parent, `demo-dashboard`. 
+Save the changes and navigate to your dashboard. The above CSS says the element with an ID of `demo-dashboard` will have a height of 90% and width of 90% (relative to its parent) and its margins will be auto sized. This gives it more space on the page and centered. Our dashboard is then being embedded into the element with a class of `looker-embed` (more on this later in the EmbedSDK object). We are telling it to take up 100% of its parent, `demo-dashboard`.
 
 And we have a normal sized dashboard :party:
 
@@ -93,13 +93,13 @@ Lets walkthrough what exactly is happening to make this work:
 7. The signed url will then be put into the `src` property of an iframe. By having the line `.appendTo('#dashboard')`, the iframe will placed in the element that has an id of `dashboard`; `<div id="dashboard"></div>`.
 8. The dashboard is also being applied with a classname of `looker-embed` through the line `looker-embed` which sizes it appropriately on the page.
 
-There is A LOT happening here with just a few lines of configuration. That is the baseline of what the EmbedSDK is great at, with just a few lines of configuration, you can provide advanced capabilities of the Looker embed without going into  the complexities of the code underneath. 
+There is A LOT happening here with just a few lines of configuration. That is the baseline of what the EmbedSDK is great at, with just a few lines of configuration, you can provide advanced capabilities of the Looker embed without going into  the complexities of the code underneath.
 
 
 ### Change the user in demo/demo_user.json
 There is one other configuration piece, who this user is and what attributes to they have. Navigate to the `demo_user.json` file, here we are going to change the user_name and their permissions.
 
-**Add your own external\_user\_id in your code; e.g., yourfirstname-yourlastname-567** 
+**Add your own external\_user\_id in your code; e.g., yourfirstname-yourlastname-567**
 
 ```json
 {
@@ -137,11 +137,10 @@ There is one other configuration piece, who this user is and what attributes to 
 
 ```
 
-This file does not live update like the others since demo_user.json is picked up only on `npm start`; kill the terminal session `control+c` and `npm start` again. 
+This file does not live update like the others since demo_user.json is picked up only on `npm start`; kill the terminal session `control+c` and `npm start` again.
 
 Changing the json file gave the user more permissions like the ability to explore from the dashboard we embedded. Check to make sure you can explore.
 
-This is similar to an environment variable in our context because only our server is using this information; we don't want the user to be able to choose their external_group_id and user_attributes. 
+This is similar to an environment variable in our context because only our server is using this information; we don't want the user to be able to choose their external_group_id and user_attributes.
 
 Now everything is configured and ready for us to start playing with configuring properties for the EmbedSDK.
-

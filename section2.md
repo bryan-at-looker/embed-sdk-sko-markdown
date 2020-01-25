@@ -36,15 +36,15 @@ Changing the theme: Can I change the CSS, colors, font?
 
 Add this to the LookerEmbedSDK above `.build()`
 ```
-.withTheme('currency_white')
+.withTheme('sko')
 ```
 
 Bonus: Add in a special theme for this user's external group_id. Change `withTheme()` to
 
 ```
-.withTheme( (user.external_group_id == 'customerABC') ? 'dialpad' : 'currency_white' )
+.withTheme( (user.external_group_id == 'customerABC') ? 'sko' : '' )
 ```
-The logic above says: 
+The logic above says:
 > If external_group_id == customerABC then display dialpad theme, else use currency_white theme
 
 ### Adding basic custom filters
@@ -66,7 +66,7 @@ In the series of functions(?) within `LookerEmbedSDK` in `demo.ts` we have a `.t
 const setupDashboard = (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
-	dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value }) })
+  dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value }) })
   }
 }
 ```
@@ -89,8 +89,8 @@ You full setupDashboard will look like this now.
 const setupDashboard = (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
-    dropdown.addEventListener('change', (event) => { 
-      dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value }) 
+    dropdown.addEventListener('change', (event) => {
+      dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value })
       dashboard.run()
     })
   }
@@ -101,7 +101,7 @@ This will now change the filter and run the dashboard everytime the value is cha
 
 Another common ask is to make sure that multiple scrollbars don't appear, one within the iframe and one on the parent page.
 
-![HTML height](./images/section2-height-scroll-before.png)
+![HTML height](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section2-height-scroll-before.png?raw=true)
 
 In order to this, we need to listen to metadata that Looker is sending out to the parent page through Javascript events. The `page:properties:changed` event ([docs](https://docs.looker.com/reference/embedding/embed-javascript-events#page:properties:changed)) gives us the ability to listen to the height of the Looker iframe and then we can dynamically change the style of the parent `div, #dashboard`.
 
@@ -144,7 +144,7 @@ Then within the EmbedSDK code we need to tell it to perform this function when i
 
 
 
-![HTML height](./images/section2-height-html.png)
+![HTML height](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section2-height-html.png?raw=true)
 
 The scroll bar is now on the outer page and not in the iframe, it feels more native and prevents the "multiple scroll bar problem".
-![HTML height](./images/section2-height-scroll-after.png)
+![HTML height](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section2-height-scroll-after.png?raw=true)

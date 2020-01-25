@@ -1,6 +1,6 @@
 # Section 5
 
-pull in new skin
+pull in new skin from git
 
 
 ```
@@ -38,18 +38,18 @@ If you look at your console (Command+Option+j) you will see the options that are
 ```js
 {
   "layouts": [
-  	{
-  	  "id": 5,
-  	  "dashboard_layout_components": [...],
-  	  ...
-  	}
+    {
+      "id": 5,
+      "dashboard_layout_components": [...],
+      ...
+    }
   ],
   "elements": {
-  	"36": {
-  	  "title": "Total Gross Margin",
-	  "vis_config": {...} 	  
-  	},
-  	...
+    "36": {
+      "title": "Total Gross Margin",
+    "vis_config": {...}
+    },
+    ...
   }
 }
 ```
@@ -62,7 +62,7 @@ The first thing we will try to change is every title on all the tiles. When we'r
 
 So lets create a function that will update the charts and graph tiles
 
-![title change](./images/section5-title-changer.gif)
+![title change](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section5-title-changer.gif?raw=true)
 
 
 ```js

@@ -92,6 +92,14 @@ Now lets call this function where it makes most sense, the place where we listen
 
 In the case above we're both updating the visualization configuration and running at the dashboard so theres a reload. But the dashboard doesn't have to reload to set options. Lets take an example where we will change all of our visualizations to tables by clicking a button.
 
+First lets create a function that accepts an input of the element we clicked on and
+
+1. Flips the color of the icon
+2. Flips the value associated to the icon
+3. Uses the value to determine if we are swapping to tables or from tables
+4. If we're going to tables, it loops through each element and changes the vis_config.type to `looker_grid` then uses `.setOptions()` to set the visualization configuration
+5. If we're moving from tables, it takes the default dashboard options
+
 ```
 
 ```

@@ -177,4 +177,96 @@ How would you do unlimited rows in this table?
 query_params['limit'] = "-1"
 ```
 
-You could try to other things like move this into a pop-up modal
+You could try to other things like move this into a pop-up modal...
+
+### Create as dashboard dropdown
+
+insert a new dropdown in `index.html`. Starting on line 49 insert the new dropdown divs
+
+```html
+      <div id="select-dashboard" class="ui selection violet dropdown">
+        <input type="hidden" name="dashboard">
+        <i class="chart line icon violet" style="display: none;"></i>
+        <div class="default text">Dashboards</div>
+        <div id="dashboard-dropdown-menu" class="menu">
+          <div class="item" data-value="">Select a dashboard...</div>
+        </div>
+      </div>
+```
+
+Starting on line 77 insert a new function to handle the dropdown clicks
+
+```js
+    $('#select-dashboard')
+      .dropdown()
+    ;
+```
+
+Create a function that listens to the changes of the dropdowns, makes an api call to get all the dashboards avialable to the user, and will reset the iframe when it is selected.
+
+Place this function at the bottom of `demo.ts`
+
+
+```js
+async function addDashboardOptions () {
+  const dashboard_dropdown_parent = document.getElementById('select-dashboard')
+  if (dashboard_dropdown_parent) {
+    dashboard_dropdown_parent.addEventListener('change', (event: any) => { 
+      const dashboard_div = document.getElementById('dashboard')
+      if (dashboard_div) {
+        dashboard_div.firstChild!.remove()
+        embedSdkInit( (event.target as HTMLSelectElement).value )
+      }
+    })
+  }
+  const dropdown = document.getElementById('dashboard-dropdown-menu')
+  let dashboards = await sdk.ok(sdk.all_dashboards())
+  dashboards = dashboards.sort((a,b) => {
+    if (a.title!.toLowerCase() > b.title!.toLowerCase() ) { return 1 }
+    if (a.title!.toLowerCase() < b.title!.toLowerCase() ) { return -1 }
+    return 0
+  })
+  if (dropdown && dashboards && dashboards.length > 1) {
+    dashboards.forEach(function (db: any, i: number) {
+      dropdown.appendChild(dashboardItem(db))
+    })
+  }
+}
+
+function dashboardItem (db: any) {
+  const dropdown_item = document.createElement('div')
+  dropdown_item.classList.add('item')
+  dropdown_item.setAttribute('data-value', db.id)
+  dropdown_item.innerHTML = `${db.title}`
+  return dropdown_item
+}
+```
+
+You'll also need to update the first line of the `embedSdkInit` function. Replace line XX with below
+
+```js
+function embedSdkInit ( dashboard_id: any ) {
+```
+
+At the top of the file, replace line XX with 
+
+```js
+document.addEventListener('DOMContentLoaded', ()=>embedSdkInit(dashboard_id))
+```
+
+### use local storage for remembering dashboard
+
+store the dashboard selection, on line XX within the `change` function
+
+```
+localStorage.setItem('dashboard', (event.target as HTMLSelectElement).value )
+```
+
+update the `DOMContentLoaded` function on line XX to include the `getAttribute`
+
+```js
+document.addEventListener('DOMContentLoaded', ()=> {
+  const dashboard = localStorage.getItem('dashboard') || dashboard_id
+  embedSdkInit(dashboard)
+})
+```

@@ -29,6 +29,12 @@ class EmbedSession extends CorsSession {
     return token
   }
 }
+
+const session = new EmbedSession({
+  base_url: `https://${looker_host}:19999`,
+  api_version: '3.1'
+} as IApiSettings)
+sdk = new LookerSDK(session)
 ```
 
 The above code 
@@ -44,7 +50,7 @@ The above code
     app.get('/token', async function(req, res) {
       const token = await accessToken(user.external_user_id);
       res.json( token );
-    w});
+    });
 ```
 
  Then import the function we need `accessToken` by updating the `auth_utils` line at the top.
@@ -53,7 +59,7 @@ The above code
 var { createSignedUrl, accessToken } = require('./server_utils/auth_utils')
 ```
 
- Now lets create the endpoint in `auth_utils.js`, at the end of the file create the `accessToken` function
+ Now lets create the endpoint in `auth_utils.ts`, at the end of the file create the `accessToken` function
 
  ```
 export async function accessToken (external_user_id: string) {

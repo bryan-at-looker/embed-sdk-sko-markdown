@@ -1,6 +1,6 @@
 # Section 5
 
-pull in new skin from git
+pull in new skin
 
 
 ```
@@ -8,11 +8,10 @@ git ...
 ```
 
 
-It will feel very familiar, we've just added prepackaged styling from [Semantic UI](https://semantic-ui.com/). You will see a bit of Looker components in the extension framework, but we didn't want to have you all switch to React.
+It will feel very familiar, we've just added prepackaged styling from [Semantic UI](https://semantic-ui.com/). This is very similar to how you might use Looker components in the future, just using React.
 
 
-
-Dynamic dashboard control starts with listening to understanding what options we have. We are going to start listening to the `dashboard:load` event to see the options that are available to us.
+Dynamic dashboard control starts with understanding what options we have to play with. We are going to start listening to the `dashboard:load` event to see the options that are available to us.
 
 
 Create a function at the bottom of `demo.ts`
@@ -38,23 +37,23 @@ If you look at your console (Command+Option+j) you will see the options that are
 ```js
 {
   "layouts": [
-    {
-      "id": 5,
-      "dashboard_layout_components": [...],
-      ...
-    }
+  	{
+  	  "id": 5,
+  	  "dashboard_layout_components": [...],
+  	  ...
+  	}
   ],
   "elements": {
-    "36": {
-      "title": "Total Gross Margin",
-    "vis_config": {...}
-    },
-    ...
+  	"36": {
+  	  "title": "Total Gross Margin",
+	  "vis_config": {...} 	  
+  	},
+  	...
   }
 }
 ```
 
-Please read the documentation on [dashboard:loaded](https://docs.looker.com/reference/embedding/embed-javascript-events#dashboard:loaded) to see more explanation and a full set of options.
+Head over to the Looker documentation on [dashboard:loaded](https://docs.looker.com/reference/embedding/embed-javascript-events#dashboard:loaded) for more explanation and a full set of options.
 
 In short: these are the properties of the dashboard we are allowed to change for dynamic dashboard control.
 
@@ -62,7 +61,7 @@ The first thing we will try to change is every title on all the tiles. When we'r
 
 So lets create a function that will update the charts and graph tiles
 
-![title change](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section5-title-changer.gif?raw=true)
+![title change](./images/section5-title-changer.gif)
 
 
 ```js
@@ -94,12 +93,99 @@ In the case above we're both updating the visualization configuration and runnin
 
 First lets create a function that accepts an input of the element we clicked on and
 
+```
+function tableChange(table_icon: HTMLElement) {
+  let new_elements = JSON.parse(JSON.stringify(gOptions.elements))
+  const to_table = ( table_icon.getAttribute('data-value') == '0' ) ? true : false
+  table_icon.classList.remove((to_table) ? 'black' : 'violet')
+  table_icon.classList.add((to_table) ? 'violet' : 'black')
+  table_icon.setAttribute('data-value', (to_table) ? '1': '0')
+  if (to_table) {
+    Object.keys(new_elements).forEach(element => {
+      new_elements[element].vis_config.type = 'looker_grid'
+    })
+    gDashboard.setOptions({ elements: new_elements})
+  } else {
+    gDashboard.setOptions({ elements: gOptions.elements })
+  }
+}
+```
+This function does the following
+
 1. Flips the color of the icon
 2. Flips the value associated to the icon
 3. Uses the value to determine if we are swapping to tables or from tables
 4. If we're going to tables, it loops through each element and changes the vis_config.type to `looker_grid` then uses `.setOptions()` to set the visualization configuration
 5. If we're moving from tables, it takes the default dashboard options
 
+Now we need to call this function and pass it an HTML element for the button we're clicking. We can add this within the `setupDashboard` function underneath where we make our API calls for the first dropdown. You can put this starting on line XX.
+
+
+```
+  const table_icon = document.getElementById('table-swap')
+  if (table_icon) {
+    table_icon.addEventListener('click', () => { 
+      tableChange(table_icon)
+    })
+  }
+```
+
+bonus: Don't change the single value visualizations; wrap a condition around where we set `looker_grid`
+
+```
+  if (new_elements[element].vis_config.type !== 'single_value' ) {
+    new_elements[element].vis_config.type = 'looker_grid'
+  }
+```
+
+
+Lets find a very specific tile and have a control that only updates that one tile. Donut charts suck, but execs love them, so lets create a button that lets you toggle the donut on and off. Lets do this by just targeting a single element.
+
+We've been logging the options for dynamic dashboard control, so lets poke around in our console (Command+Shift+J) in there to find the `looker_donut_multiples `.
+
+```
+{ 
+  ...,
+  "42": {
+  "title": "Active Users",
+  "title_hidden": false,
+  "vis_config": {
+    "type": "looker_donut_multiples",
+  	...,
+    "title": "Active Users"
+  },
+  ...,
+}
+```
+
+So our element is 42, lets create a couple variables to help us swap in demo_config.ts
+
+
+```
+const swap_element = "42"
+const new_element = {
+
+}
+```
+
+Import in demo.ts
+
+
 ```
 
 ```
+
+create function to swal
+
+
+```
+
+```
+
+Call function to swap on click
+
+
+```
+
+```
+

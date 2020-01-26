@@ -1,10 +1,9 @@
 # Section 5
 
-pull in new skin
-
+pull in new skin: This will blow away anything you haven't saved.
 
 ```
-git ...
+git checkout re-skinner --force
 ```
 
 

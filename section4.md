@@ -34,7 +34,7 @@ At the bottom of demo.ts create a new function that will take a list of json res
 
 function addStateOptions(data: any) {
   const dropdown = document.getElementById('select-dropdown')
-  data.forEach(function (row: any) {
+  data.forEach(function (row: any, i: number) {
     if (query_field_name && row[query_field_name] && dropdown) {
       const new_option = document.createElement('option')
       new_option.value = row[query_field_name]
@@ -113,25 +113,9 @@ function addStateOptions(data: any) {
 }
 ```
 
-Keep dashboard filters in sync with API calls
+###Keep dashboard filters in sync with API calls
 
-function that clears options, reruns query
-
-```json
-{
-  "type": "dashboard:filters:changed",
-  "dashboard": {
-    "id": 2,
-    "title": "Business Pulse",
-    "dashboard_filters": {
-      "Date": "90 days",
-      "State": "New York"
-    },
-    "absoluteUrl": "https://sko2020.dev.looker.com/embed/dashboards/2?embed_domain=https:%2F%2Fembed.demo:8080&sdk=2&State=New%20York&theme=sko&Date=90%20days&filter_config=%7B%22Date%22:%5B%7B%22type%22:%22past%22,%22values%22:%5B%7B%22constant%22:%2290%22,%22unit%22:%22day%22%7D,%7B%7D%5D,%22id%22:0%7D%5D,%22State%22:%5B%7B%22type%22:%22%3D%22,%22values%22:%5B%7B%22constant%22:%22New%20York%22%7D,%7B%7D%5D,%22id%22:1%7D%5D%7D",
-    "url": "/embed/dashboards/2?embed_domain=https:%2F%2Fembed.demo:8080&sdk=2&State=New%20York&theme=sko&Date=90%20days&filter_config=%7B%22Date%22:%5B%7B%22type%22:%22past%22,%22values%22:%5B%7B%22constant%22:%2290%22,%22unit%22:%22day%22%7D,%7B%7D%5D,%22id%22:0%7D%5D,%22State%22:%5B%7B%22type%22:%22%3D%22,%22values%22:%5B%7B%22constant%22:%22New%20York%22%7D,%7B%7D%5D,%22id%22:1%7D%5D%7D"
-  }
-}
-```
+If we wanted to keep the Top 10 states in sync with the date range on the dashboard, we can listen to when the date range changes on the filter, re-run an api call
 
 Create new constants
 

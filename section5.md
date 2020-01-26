@@ -93,7 +93,7 @@ In the case above we're both updating the visualization configuration and runnin
 
 First lets create a function that accepts an input of the element we clicked on and
 
-```
+```js
 function tableChange(table_icon: HTMLElement) {
   let new_elements = JSON.parse(JSON.stringify(gOptions.elements))
   const to_table = ( table_icon.getAttribute('data-value') == '0' ) ? true : false
@@ -121,7 +121,7 @@ This function does the following
 Now we need to call this function and pass it an HTML element for the button we're clicking. We can add this within the `setupDashboard` function underneath where we make our API calls for the first dropdown. You can put this starting on line XX.
 
 
-```
+```js
   const table_icon = document.getElementById('table-swap')
   if (table_icon) {
     table_icon.addEventListener('click', () => { 
@@ -132,18 +132,22 @@ Now we need to call this function and pass it an HTML element for the button we'
 
 bonus: Don't change the single value visualizations; wrap a condition around where we set `looker_grid`
 
-```
+```js
   if (new_elements[element].vis_config.type !== 'single_value' ) {
     new_elements[element].vis_config.type = 'looker_grid'
   }
 ```
 
+### Vis Swap
+
+![Vis Swap](https://raw.githubusercontent.com/bryan-at-looker/embed-sdk-sko-markdown/master/images/section5-donut-swap.gif?raw=true)
 
 Lets find a very specific tile and have a control that only updates that one tile. Donut charts suck, but execs love them, so lets create a button that lets you toggle the donut on and off. Lets do this by just targeting a single element.
 
-We've been logging the options for dynamic dashboard control, so lets poke around in our console (Command+Shift+J) in there to find the `looker_donut_multiples `.
 
-```
+We've been logging the options for dynamic dashboard control, so lets poke around in our console (Command+Shift+J) in there to find the `looker_donut_multiples`.
+
+```js
 { 
   ...,
   "42": {
@@ -161,31 +165,127 @@ We've been logging the options for dynamic dashboard control, so lets poke aroun
 So our element is 42, lets create a couple variables to help us swap in demo_config.ts
 
 
-```
+```js
 const swap_element = "42"
-const new_element = {
-
+export const new_vis_config = {
+  "type": "looker_bar"
 }
 ```
 
 Import in demo.ts
 
 
+```js
+import { swap_element, new_vis_config } from './demo_config'
 ```
 
+create function to swap; place at the end of `demo.ts`
+
+
+```js
+function swapVisConfig( icon: HTMLElement ) {
+  if ( swap_element && gOptions && gOptions.elements && gOptions.elements[swap_element] ) {
+    const elements = JSON.parse(JSON.stringify( gOptions.elements ))
+    const to_original = (icon.getAttribute('data-value') === '1') ? true : false
+    icon.classList.remove((to_original) ? 'black' : 'violet')
+    icon.classList.add((to_original) ? 'violet' : 'black')
+    icon.setAttribute('data-value', (to_original) ? '0': '1')
+
+    if (to_original) {
+      let new_element = { [swap_element]: elements[swap_element] }
+      new_element[swap_element]['vis_config'] = Object.assign( new_element[swap_element]['vis_config'],  new_vis_config  )
+      gDashboard.setOptions({ elements: new_element})
+    } else {
+      gDashboard.setOptions({ elements: gOptions.elements })
+    }
+  }
+} 
 ```
 
-create function to swal
+Call function to swap on click; in `demo.ts` in the setupDashboard, at the end of the function at line XX.
 
-
+```js
+  const donut_icon = document.getElementById('vis-swap')
+  if (donut_icon) {
+    donut_icon.addEventListener('click', () => { 
+      swapVisConfig(donut_icon)
+    })
+  }
 ```
 
-```
+### Layout
 
-Call function to swap on click
-
-
-```
+In `demo.ts`, switch dashboard
 
 ```
+export const dashboard_id = 6
+```
 
+*Note:* We're switching dashboards; if you want to keep your vis swap you have to change `swap_element` too.
+
+In `demo_config.ts` create an object that listens to the KPIs filter object
+
+```js
+export const dashbord_layout_filter = 'KPIs'
+```
+
+in `demo.ts` import the 
+
+```js
+import { dashbord_layout_filter } from './demo_config'
+```
+
+create a function to hide tiles
+
+```js
+function layoutFilter(filter: any) {
+  const copy_options = JSON.parse(JSON.stringify(gOptions))
+  const elements = copy_options.elements || {}
+  const layout = copy_options.layouts[0]
+  let components = (layout.dashboard_layout_components) ? layout.dashboard_layout_components : []
+  
+  const new_components: any = []
+  filter = filter.split(',')
+
+  components.forEach((c: any )=>{
+    const found = elements[c.dashboard_element_id]
+    if (filter.indexOf(found.title) > -1 ) {
+      new_components.push(c)
+    } 
+  })
+  layout.dashboard_layout_components = new_components
+  gDashboard.setOptions({ layouts: [layout] })
+}
+```
+
+call function in `demo.ts` at the end of filtersUpdate function
+
+```js
+  if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {
+    layoutFilter(dashboard_filters[dashbord_layout_filter])
+  }
+```
+
+### have one KPI on load
+
+At the end of loadEvent function place this function
+
+```js
+  if (event && event.dashboard && event.dashboard.dashboard_filters) {
+    const dashboard_filters = event.dashboard.dashboard_filters
+    if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {
+      layoutFilter(dashboard_filters[dashbord_layout_filter])
+    }
+  }
+```
+
+Then place a default filter for the KPI field
+
+```js
+  .withFilters({
+    [dashbord_layout_filter]: 'Active Users',
+    [dashboard_date_filter]: '30 days'
+  })
+```
+
+Your dashboard should collapse to just the Active Users tiles

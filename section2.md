@@ -9,22 +9,22 @@ Add this to `demo_config.ts` at the bottom
 
 ```
 // the name of the filter on the dashboard for state
-export const dashboardStateFilter = 'State'
+export const dashboard_state_filter = 'State'
 ```
 
 In `demo.ts`:
 
-Add new line at the top to import the new variable from demo_config.ts. 
+Add new line at the top to import the new variable from demo_config.ts.
 
 ```
-import {  dashboardStateFilter } from './demo_config'
+import {  dashboard_state_filter } from './demo_config'
 ```
 
 Add this to LookerEmbedSDK above `.build()`
 
 
 ```
-.withFilters({[dashboardStateFilter]: 'California'})
+.withFilters({[dashboard_state_filter]: 'California'})
 
 ```
 
@@ -72,7 +72,7 @@ const setupDashboard = (dashboard: LookerEmbedDashboard) => {
 }
 ```
 
-Play around with the filter, your dashboard should be responding to the new dropdown. 
+Play around with the filter, your dashboard should be responding to the new dropdown.
 
 **Note:** There may be some delay between the dropdown and the filter updating thats normal.
 
@@ -139,7 +139,7 @@ function changeHeight( event: any ) {
 }
 ```
 
-We have it a little bit of a buffer by adding `15` pixels. 
+We have it a little bit of a buffer by adding `15` pixels.
 
 Then within the EmbedSDK code we need to tell it to perform this function when it receives the `page:properties:changed` event.
 

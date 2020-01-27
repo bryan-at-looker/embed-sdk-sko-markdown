@@ -72,6 +72,8 @@ export async function accessToken (external_user_id: string) {
     }
 ```
 
+ These were all backend server changes, so we need to restart the server. Go to your terminal and press Command+C; then `npm start` to start it again.
+
  Continuing on from the flow above, once the `/token` endpoint is hit, the backend server
 
 1. We take take the user's `external_user_id` and pass it to the accessToken function that runs on the server

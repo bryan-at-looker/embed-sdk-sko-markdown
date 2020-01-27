@@ -53,7 +53,7 @@ The above code
     });
 ```
 
- Then import the function we need `accessToken` by updating the `auth_utils.ts` file. Place this line at the top.
+ Then import the function we need `accessToken` by updating the `webpack-devserver.config.js` file. Place this line at the top.
 
  ```
 var { accessToken } = require('./server_utils/auth_utils')
@@ -84,7 +84,7 @@ Our user now has an `access_token` to make API calls as themelves.
 
 Let's verify that the access token is working by making an API call from within the front end and checking the results of it.
 
-After our dashboard loads, we will want to make and API call and check the user's credentials. Within `setupDashboard()` lets make our first API call by inserting this within the function but at the bottom.
+After our dashboard loads, we will want to make an API call and check the user's credentials. Within `setupDashboard()` lets make our first API call by inserting this within the function but at the bottom.
 
 ```
 const me = await sdk.ok(sdk.me())

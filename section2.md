@@ -102,7 +102,7 @@ const setupDashboard = (dashboard: LookerEmbedDashboard) => {
 
 This will now change the filter and run the dashboard everytime the value is changed.
 
-Another common ask is to make sure that multiple scrollbars don't appear, one within the iframe and one on the parent page.
+Another common ask is to make sure that multiple scrollbars don't appear, one within the iframe and one on the parent page (you wont see this in your example right now, but good to know for the future)
 
 ![HTML height](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section2-height-scroll-before.png?raw=true)
 

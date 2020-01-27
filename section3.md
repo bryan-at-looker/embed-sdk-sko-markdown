@@ -25,7 +25,7 @@ Then lets instantiate it by placing this at line XX.
 let sdk: LookerSDK
 class EmbedSession extends CorsSession {
   async getToken() {
-    const token = await sdk.ok(sdk.authSession.transport.request<AuthToken,IError>('GET', `/token`  ))
+    const token = await sdk.ok(sdk.authSession.transport.request<AuthToken,IError>('GET', `${document.location.origin}/token`  ))
     return token
   }
 }
@@ -53,13 +53,13 @@ The above code
     });
 ```
 
- Then import the function we need `accessToken` by updating the `auth_utils` line at the top.
+ Then import the function we need `accessToken` by updating the `auth_utils` line at the top; you will replace line 5 with the following.
 
  ```
 var { createSignedUrl, accessToken } = require('./server_utils/auth_utils')
 ```
 
- Now lets create the endpoint in `auth_utils.ts`, at the end of the file create the `accessToken` function
+ Now lets create the endpoint in `server_utils/auth_utils.ts`, at the end of the file create the `accessToken` function
 
  ```
 export async function accessToken (external_user_id: string) {
@@ -78,17 +78,17 @@ export async function accessToken (external_user_id: string) {
 2. The `accessToken` function uses our Admin credentials to use the API again. First it finds the user based on the `external_user_id` but calling `user_for_credential` API.
 3. Once we found the user, we can ask for the an authorization token from `login_user`. We return this back to the browser to make new requests.
 
-Our user now has an `access_token` to make API calls as themelves. 
+Our user now has an `access_token` to make API calls as themelves.
 
 ### Verifying and Debugging
 
 Let's verify that the access token is working by making an API call from within the front end and checking the results of it.
 
-After our dashboard loads, we will want to make and API call and check the user's credentials. With `setupDashboard()` lets make our first API call by placing inserting this on line XX.
+After our dashboard loads, we will want to make and API call and check the user's credentials. Within `setupDashboard()` lets make our first API call by inserting this within the function but at the bottom.
 
 ```
 const me = await sdk.ok(sdk.me())
-console.log(me)
+console.log('me', me)
 ```
 
 This is the first time we're making an API call in the application so this is flow when the page reloads

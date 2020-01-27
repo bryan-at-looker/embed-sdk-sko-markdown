@@ -1,14 +1,13 @@
 # Section 4: API Introductions
 
-Start with no options in your dropdown 
+Remove the options from your dropdown in the HTML. In `index.html` You're going to want to remove several lines of code starting after `<select id="select-dropdown">` and before `</select>`; you will be removing all the options. Paste the below into that spot you just removed.
 
  ```
-   <select id="select-dropdown">
     <option value="">Select...</option>
-  </select>
+
  ```
  
-Create an API object that we will run and place in demo_config.js:
+We're going to be running a query from within the front end. Lets create a couple variables that we wil use to make the API call. Place this at the bottom of the `demo_config.ts`
 
 ```js
 export const query_object = {
@@ -22,13 +21,13 @@ export const query_object = {
 export const query_field_name = 'users.state'
 ```
 
-In demo.ts import query_object:
+Place this with the other imports near the top of `demo.ts`
 
 ```
-import { lookerHost, dashboardId, dashboardStateFilter, query_object, query_field_name } from './demo_config'
+import {  query_object, query_field_name } from './demo_config'
 ```
 
-At the bottom of demo.ts create a new function that will take a list of json responses
+At the bottom of demo.ts we will create a function that creates new `<option/>` HTML tags for us. We will send the function the list of states, and it will return the options for us.
 
 ```js
 
@@ -51,7 +50,7 @@ function addStateOptions(data: any) {
 }
 ```
 
-Run an API call that grabs all states and passes it to our new function. We will want to run this after the dashboard loads, so place it after our first API call
+We have to get the list of states so lets run an API call that grabs all states and passes it to our new function. We will want to run this after the dashboard loads, so place it after our first API call `sdk.me()` within the function `setupDashboard(...)`
 
 ```js
   const states = await sdk.ok(sdk.run_inline_query( 
@@ -76,9 +75,7 @@ Remember anything you are changing about your user is only done server side, so 
 
 Check your dropdown, you should just see the US states. Remember, we've setup the embed SDK to only make API calls as that user, we can now keep everything in sync from model to iframe to API calls.
 
-Limit to the top 10 states by total gross margin
-
-`demo_config.ts` add in new fields, change sorts, limit to 10.
+Limit to the top 10 states by total gross margin. In`demo_config.ts` swap out the `query_object` for below.
 
 ```
 export const query_object = {
@@ -86,11 +83,12 @@ export const query_object = {
   "view": "order_items",
   "fields": ["users.state", "order_items.total_gross_margin"],
   "sorts": ["order_items.total_gross_margin desc"],
-  "limit": "10"
+  "limit": "10",
+  "filters": {}
 }
 ```
 
-`demo.ts` include row number `i` and place it inside the HTML.
+`demo.ts` include row number `i` and place it inside the HTML. Replace the entire  `addStateOptions` function with the block below.
 
 ```js
 function addStateOptions(data: any) {
@@ -115,9 +113,9 @@ function addStateOptions(data: any) {
 
 ###Keep dashboard filters in sync with API calls
 
-If we wanted to keep the Top 10 states in sync with the date range on the dashboard, we can listen to when the date range changes on the filter, re-run an api call
+We're now showing "Trending States" in the dropdown and giving the end user context to the order (no magnitude... yet). But its static to our initial query, top states of all time by gross margin. An idea to make it more dynamic is to have the dropdown respond to the changes from within the iframe. When a user changes the date filter, maybe we change the dropdown too? Here is how you would do that.
 
-Create new constants
+Create new constants in `demo_config.ts`
 
 ```
 // map the dashboard date filter to the query date filter
@@ -126,18 +124,18 @@ export const query_date_filter = 'order_items.created_date'
 ```
 
 
-Import the constants
+Import the constants into `demo.ts` near the top with the other imports
 
 ```
-import { lookerHost, dashboardId, dashboardStateFilter, query_object, query_field_name, dashboard_date_filter, query_date_filter } from './demo_config'
+import { dashboard_date_filter, query_date_filter } from './demo_config'
 ```
 
 
-Create new function for when the dashboard filters update for date
+Create new function for when the dashboard filters update for date in `demo.ts`. You can put this at the very bottom of the file.	
 
 ```js
 async function filtersUpdates( event: any ) {
-  console.log(event)
+  console.log('dashboard:filters:changed', event)
   // instantiate elements, filters, and query objects
   const dashboard_filters: any = (event && event.dashboard && event.dashboard.dashboard_filters) ? event.dashboard && event.dashboard.dashboard_filters : undefined
   let dropdown = document.getElementById('select-dropdown')
@@ -160,8 +158,10 @@ async function filtersUpdates( event: any ) {
 }
 ```
 
-add the filter listener in the embed sdk
+Then lets add the listener from the Embed SDK to call this function after it gets a filter changed
 
 ```
 .on('dashboard:filters:changed', filtersUpdates)
 ```
+
+Change the date filter on the dashboard and check the dropdown list.

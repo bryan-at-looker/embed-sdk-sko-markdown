@@ -13,7 +13,7 @@ It will feel very familiar, we've just added prepackaged styling from [Semantic 
 Dynamic dashboard control starts with understanding what options we have to play with. We are going to start listening to the `dashboard:load` event to see the options that are available to us.
 
 
-Create a function at the bottom of `demo.ts`
+Create a function at the bottom of `demo.ts` to track the load event
 
 ```js
 function loadEvent (event: any) {

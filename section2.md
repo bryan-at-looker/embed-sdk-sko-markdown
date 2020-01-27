@@ -64,7 +64,7 @@ This puts the dropdown with California selected (our default filter from above).
 Looking at the code block in `demo.ts` after the `LookerEmbedSDK.createDashboardWithId(dashboard_id)`  in we have a `.then(setupDashboard)`. What this says is after we've connected the iframe to the page, we want to run the `setupDashboard` function. In this function, we'll want to listen to a change of the dropdown and apply the new value to the iframe. replace the current blank `const setupDashboard = (...)...{...}` block with this
 
 ```
-const setupDashboard = (dashboard: LookerEmbedDashboard) => {
+const setupDashboard = async (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
   dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboard_state_filter]: (event.target as HTMLSelectElement).value }) })
@@ -89,7 +89,7 @@ It would be nice if we didn't have to hit the run button so much, for a dropdown
 Your full setupDashboard will look like this now.
 
 ```
-const setupDashboard = (dashboard: LookerEmbedDashboard) => {
+const setupDashboard = async (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
     dropdown.addEventListener('change', (event) => {

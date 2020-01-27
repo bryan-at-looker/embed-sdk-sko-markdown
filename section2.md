@@ -14,7 +14,7 @@ export const dashboardStateFilter = 'State'
 
 In `demo.ts`:
 
-Add new line at the top to import the new variable from demo_config.ts. 
+Add new line at the top to import the new variable from demo_config.ts.
 
 ```
 import {  dashboardStateFilter } from './demo_config'
@@ -48,7 +48,7 @@ The logic above says:
 Feel free to revert it :)
 
 ### Adding basic custom filters
-We need a select dropdown and state options to change the state. Add this right after `<h3>SKO 2020 Embed SDK Walkthrough</h3>` on line XX
+We need a select dropdown and state options to change the state. Navigate to your `index.html` file. At the bottom, add this right after `<h3>SKO 2020 Embed SDK Walkthrough</h3>` on line XX
 
 ```
   <select id="select-dropdown">
@@ -72,7 +72,7 @@ const setupDashboard = (dashboard: LookerEmbedDashboard) => {
 }
 ```
 
-Play around with the filter, your dashboard should be responding to the new dropdown. 
+Play around with the filter, your dashboard should be responding to the new dropdown.
 
 **Note:** There may be some delay between the dropdown and the filter updating thats normal.
 
@@ -139,7 +139,7 @@ function changeHeight( event: any ) {
 }
 ```
 
-We have it a little bit of a buffer by adding `15` pixels. 
+We have it a little bit of a buffer by adding `15` pixels.
 
 Then within the EmbedSDK code we need to tell it to perform this function when it receives the `page:properties:changed` event.
 

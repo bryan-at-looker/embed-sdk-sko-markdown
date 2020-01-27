@@ -1,10 +1,11 @@
 # Section 4: API Introductions
 
-Remove the options from your dropdown in the HTML. In `index.html` You're going to want to remove several lines of code starting after `<select id="select-dropdown">` and before `</select>`; you will be removing all the options. Paste the below into that spot you just removed.
+Remove the options from your dropdown in the HTML (in `index.html`). You're going to want to remove several lines of code starting after `<select id="select-dropdown">` and before `</select>`; you will be removing all the options. Paste the below into that spot you just removed.
 
 ```
 <option value="">Select...</option>
 ```
+
 
 We're going to be running a query from within the front end. Lets create a couple variables that we wil use to make the API call. Place this at the bottom of the `demo_config.ts`
 

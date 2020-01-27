@@ -67,7 +67,7 @@ Looking at the code block in `demo.ts` after the `LookerEmbedSDK.createDashboard
 const setupDashboard = (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
-  dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value }) })
+  dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboard_state_filter]: (event.target as HTMLSelectElement).value }) })
   }
 }
 ```
@@ -93,7 +93,7 @@ const setupDashboard = (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
     dropdown.addEventListener('change', (event) => {
-      dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value })
+      dashboard.updateFilters({ [dashboard_state_filter]: (event.target as HTMLSelectElement).value })
       dashboard.run()
     })
   }

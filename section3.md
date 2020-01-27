@@ -37,9 +37,9 @@ const session = new EmbedSession({
 sdk = new LookerSDK(session)
 ```
 
-The above code 
+The above code
 
-1. Extends the Typescript/JS SDK and creates a class for us to use called `EmbedSession`. 
+1. Extends the Typescript/JS SDK and creates a class for us to use called `EmbedSession`.
 2. We then tell the code how to get an authorization token for this user by creating a `getToken` function. We request this information from the dev server endpoint `/token`.
 
  We don't have an endpoint yet to grab an authorization token from the API;
@@ -53,10 +53,10 @@ The above code
     });
 ```
 
- Then import the function we need `accessToken` by updating the `auth_utils` line at the top; you will replace line 5 with the following.
+ Then import the function we need `accessToken` by updating the `auth_utils.ts` file. Place this line at the top.
 
  ```
-var { createSignedUrl, accessToken } = require('./server_utils/auth_utils')
+var { accessToken } = require('./server_utils/auth_utils')
 ```
 
  Now lets create the endpoint in `server_utils/auth_utils.ts`, at the end of the file create the `accessToken` function
@@ -101,9 +101,3 @@ This is the first time we're making an API call in the application so this is fl
 6. We use `console.log(me)` to output it to the console in your browser; open up your developer tools `View > Developer > Javascript Console` or `Cmd+Option+J`
 
 You should see the name of your user in the Javascript console. console.log is an easy way to check the value of a variable while debugging our trying to understand whats happening in your code. There are other, more sophisticated ways like [breakpoints](https://developers.google.com/web/tools/chrome-devtools/javascript/breakpoints), but `console.log()` is more than adequate for now.
-
-
-
-
-
-

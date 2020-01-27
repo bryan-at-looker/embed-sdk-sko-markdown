@@ -61,6 +61,7 @@ In `index.html` there is a style block that looks like
 ```
   <style type="text/css">
     body {
+      font-family: "Comic Sans MS", cursive, sans-serif;
       text-align: center;
     }
   </style>
@@ -72,6 +73,7 @@ Lets replace that with this.
 ```
   <style type="text/css">
     body {
+      font-family: "Comic Sans MS", cursive, sans-serif;
       text-align: center;
     }
     #demo-dashboard {

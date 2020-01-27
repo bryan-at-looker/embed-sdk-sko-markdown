@@ -164,4 +164,4 @@ Then lets add the listener from the Embed SDK to call this function after it get
 .on('dashboard:filters:changed', filtersUpdates)
 ```
 
-Change the date filter on the dashboard and check the dropdown list.
+Change the date filter on the dashboard and check the dropdown list, usually you'll see some movements

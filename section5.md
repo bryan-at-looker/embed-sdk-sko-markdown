@@ -17,6 +17,7 @@ Create a function at the bottom of `demo.ts` to track the load event
 
 ```js
 function loadEvent (event: any) {
+  console.log('dashboard:loaded', event)
   if (event && event.dashboard && event.dashboard.options ) {
     gOptions = event.dashboard.options
     console.log('OPTIONS', gOptions)
@@ -30,7 +31,7 @@ Call the function when you see the load
 .on('dashboard:loaded', loadEvent)
 ```
 
-If you look at your console (Command+Option+j) you will see the options that are available to do dynamic dashboards. It will look something like this:
+If you look at your console (Command+Option+J) you will see the options that are available to do dynamic dashboards. It will look something like this:
 
 
 ```js
@@ -62,6 +63,8 @@ So lets create a function that will update the charts and graph tiles
 
 ![title change](./images/section5-title-changer.gif)
 
+Add this at the bottom of `demo.ts`
+
 
 ```js
 function changeTitles(elements: any, state: string) {
@@ -82,7 +85,7 @@ function changeTitles(elements: any, state: string) {
 
 This function will loop through all the element keys and update the titles in each element. Single tile visualizations and other chart types have different title structures for display, so we have an if statement that updates the correct title for us. Once we've updated them all, we use our EmbedSDK variable, gDashboard to set the options to tell Looker to update; alternatively you could do this manually the old way with [Javascript Events](https://docs.looker.com/reference/embedding/embed-javascript-events#dashboard:options:set).
 
-Now lets call this function where it makes most sense, the place where we listened for the dropdown change and updated the dashboard filters. On line XX right after `dashboard.run()` you can add the below to call the function.
+Now lets call this function where it makes most sense, the place where we listened for the dropdown change and updated the dashboard filters. Within the `setupDashboard function`, right after `dashboard.run()` you add the follow.
 
 ```js
     changeTitles(gOptions.elements,(event.target as HTMLSelectElement).value)
@@ -90,7 +93,7 @@ Now lets call this function where it makes most sense, the place where we listen
 
 In the case above we're both updating the visualization configuration and running at the dashboard so theres a reload. But the dashboard doesn't have to reload to set options. Lets take an example where we will change all of our visualizations to tables by clicking a button.
 
-First lets create a function that accepts an input of the element we clicked on and
+First lets create a function that accepts an input of the element we clicked on. Place this at the bottom of `demo.ts`
 
 ```js
 function tableChange(table_icon: HTMLElement) {
@@ -115,7 +118,7 @@ This function does the following
 2. Flips the value associated to the icon
 3. Uses the value to determine if we are swapping to tables or from tables
 4. If we're going to tables, it loops through each element and changes the vis_config.type to `looker_grid` then uses `.setOptions()` to set the visualization configuration
-5. If we're moving from tables, it takes the default dashboard options
+5. If we're moving from tables, it takes the original element configurations and applies them.
 
 Now we need to call this function and pass it an HTML element for the button we're clicking. We can add this within the `setupDashboard` function underneath where we make our API calls for the first dropdown. You can put this starting on line XX.
 
@@ -129,7 +132,12 @@ Now we need to call this function and pass it an HTML element for the button we'
   }
 ```
 
-bonus: Don't change the single value visualizations; wrap a condition around where we set `looker_grid`
+Click the table swap button to see the the dynamic dashboard control in action
+
+![Table Swap](./images/section5-table-swap-icon.png)
+
+
+**Bonus:** Don't change the single value visualizations; wrap a condition to check for `looker_grid`
 
 ```js
   if (new_elements[element].vis_config.type !== 'single_value' ) {
@@ -141,10 +149,9 @@ bonus: Don't change the single value visualizations; wrap a condition around whe
 
 ![Vis Swap](https://raw.githubusercontent.com/bryan-at-looker/embed-sdk-sko-markdown/master/images/section5-donut-swap.gif?raw=true)
 
-Lets find a very specific tile and have a control that only updates that one tile. Donut charts suck, but execs love them, so lets create a button that lets you toggle the donut on and off. Lets do this by just targeting a single element.
+Lets find a very specific tile and have a control that only updates that one tile. There may be situationas where your embedding customer would like to be able to change configuration options on the fly. For example, changing the visualization type, hiding certain fields, or re-calculating a goal line. In this example, we will create a button that lets you toggle a donut on and off, but any visualization configuration is available to change. 
 
-
-We've been logging the options for dynamic dashboard control, so lets poke around in our console (Command+Shift+J) in there to find the `looker_donut_multiples`.
+We need to figure out which element we want to swap the visualization configuration on. We've been logging the options for dynamic dashboard control, so lets poke around in our console (Command+Shift+J) in there to find the Active Users tile that is of visualization type `looker_donut_multiples`.
 
 ```js
 { 
@@ -161,24 +168,23 @@ We've been logging the options for dynamic dashboard control, so lets poke aroun
 }
 ```
 
-So our element is 42, lets create a couple variables to help us swap in demo_config.ts
-
+The dashboard_element_id we want to swap is 42, lets create a couple variables in `demo.ts` to help us swap in demo_config.ts
 
 ```js
-const swap_element = "42"
+export const swap_element = "42"
 export const new_vis_config = {
   "type": "looker_bar"
 }
 ```
 
-Import in demo.ts
+Import in `demo.ts` at the top with the other imports.
 
 
 ```js
 import { swap_element, new_vis_config } from './demo_config'
 ```
 
-create function to swap; place at the end of `demo.ts`
+Place at the end of `demo.ts` to perform interactions on the
 
 
 ```js
@@ -200,8 +206,14 @@ function swapVisConfig( icon: HTMLElement ) {
   }
 } 
 ```
+The function above does the following.
+1. Flips the color of the icon after click
+2. Flips the value associated to the icon (we are using this to track state)
+3. Uses the value to determine if we are swapping from or to the original vis config
+4. After applying the visualization options, we use `.setOptions()` through the `element` object. 
 
-Call function to swap on click; in `demo.ts` in the setupDashboard, at the end of the function at line XX.
+
+The last piece is to call function to swap when the click; in `demo.ts` at the end of setupDashboard function, place this
 
 ```js
   const donut_icon = document.getElementById('vis-swap')
@@ -212,29 +224,32 @@ Call function to swap on click; in `demo.ts` in the setupDashboard, at the end o
   }
 ```
 
+This listens for when the donut icon is clicked, then runs the `swapVisConfig()` function.
+![Donut Swap](./images/section5-donut-swap-icon.png)
+
 ### Layout
 
-In `demo.ts`, switch dashboard
+In `demo_config.ts`, switch to a dashboard with a new set of filters
 
 ```
 export const dashboard_id = 6
 ```
 
-*Note:* We're switching dashboards; if you want to keep your vis swap you have to change `swap_element` too.
+*Note:* We're switching dashboards; if you want to keep your vis swap you have to change `swap_element` variable to `51`.
 
-In `demo_config.ts` create an object that listens to the KPIs filter object
+In `demo_config.ts` create an object that listens to the KPIs filter object, this is the Filter Name you see on the dashboard. It currently doensn't control any queries at all, its just a dummy filter.
 
 ```js
 export const dashbord_layout_filter = 'KPIs'
 ```
 
-in `demo.ts` import the 
+in `demo.ts` import the variable at the top near the other imports
 
 ```js
 import { dashbord_layout_filter } from './demo_config'
 ```
 
-create a function to hide tiles
+create a function to hide tiles and place it at the bottom of `demo.ts`
 
 ```js
 function layoutFilter(filter: any) {
@@ -257,7 +272,12 @@ function layoutFilter(filter: any) {
 }
 ```
 
-call function in `demo.ts` at the end of filtersUpdate function
+The above function 
+1. Creates copies of the elements and layout/components so it can update it seperately from the default
+2. Loops through each component on the dashboard
+3. If the title of the tile matches whats been selected in the KPI filters, it keeps the layout the same, if the tile's title does not match a filter selection, then it removes the layout component.
+
+call function in `demo.ts` at the end of filtersUpdate function, after `loadingIcon(false)`, we want to add this call.
 
 ```js
   if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {
@@ -265,9 +285,11 @@ call function in `demo.ts` at the end of filtersUpdate function
   }
 ```
 
+
+
 ### have one KPI on load
 
-At the end of loadEvent function place this function
+In `demo.ts`, at the end of loadEvent function place these lines of code, it will send the KPIs filter to the function so it can hide them.
 
 ```js
   if (event && event.dashboard && event.dashboard.dashboard_filters) {
@@ -278,7 +300,7 @@ At the end of loadEvent function place this function
   }
 ```
 
-Then place a default filter for the KPI field
+Then place a default filter for the KPI field where in instantiate the Embed SDK. Replace the current `.wiltFilters()` with this.
 
 ```js
   .withFilters({
@@ -287,4 +309,4 @@ Then place a default filter for the KPI field
   })
 ```
 
-Your dashboard should collapse to just the Active Users tiles
+Your dashboard should collapse to just the Active Users tiles on load!

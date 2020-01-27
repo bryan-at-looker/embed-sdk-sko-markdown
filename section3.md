@@ -86,7 +86,7 @@ Our user now has an `access_token` to make API calls as themelves.
 
 Let's verify that the access token is working by making an API call from within the front end and checking the results of it.
 
-After our dashboard loads, we will want to make an API call and check the user's credentials. Within `setupDashboard()` lets make our first API call by inserting this within the function but at the bottom.
+After our dashboard loads, we will want to make an API call and check the user's credentials. Navigate back to your `demo.ts` file. Within `setupDashboard()` lets make our first API call by inserting this within the function but at the bottom:
 
 ```
 const me = await sdk.ok(sdk.me())

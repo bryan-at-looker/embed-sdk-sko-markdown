@@ -71,7 +71,7 @@ We've got a nice long list of states / counties in there, lets narrow that down 
   }
 ```
 
-Remember anything you are changing about your user is only done server side, so in this case you need to go to your terminal and Control+C to exit the server and then `npm start` to start it up again.
+This is another server side change, so in this case you need to go to your terminal and Control+C to exit the server and then `npm start` to start it up again.
 
 Check your dropdown, you should just see the US states. Remember, we've setup the embed SDK to only make API calls as that user, we can now keep everything in sync from model to iframe to API calls.
 

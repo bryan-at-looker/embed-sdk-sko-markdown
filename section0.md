@@ -8,8 +8,8 @@ Leave the original embed SDK alone; start from scratch from this repo: Open up t
 
 ```
 git clone https://github.com/bryan-at-looker/embed-sdk-sko
-git checkout section0
 cd embed-sdk-sko
+git checkout section0
 code .
 ```
 

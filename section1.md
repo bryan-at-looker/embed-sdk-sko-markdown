@@ -106,7 +106,7 @@ There is A LOT happening here with just a few lines of configuration. That is th
 ### Change the user in demo/demo_user.json
 There is one other configuration piece, who this user is and what attributes to they have. Navigate to the `demo_user.json` file, here we are going to change the user_name and their permissions.
 
-**Add your own external\_user\_id in your code; e.g., yourfirstname-yourlastname-567**
+**Create your own external\_user\_id in your code; e.g., yourfirstname-yourlastname-567**
 
 ```json
 {

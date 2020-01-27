@@ -3,24 +3,21 @@
 
 # Section 2: Product Manager and Designer Basics
 
-Default filters on load:
+### Default filters on load:
 
-Add this to demo_config.ts
+Add this to `demo_config.ts` at the bottom
 
 ```
-
 // the name of the filter on the dashboard for state
 export const dashboardStateFilter = 'State'
-
-
 ```
 
 In `demo.ts`:
 
-Update Line XX to import the new variable from demo_config.ts
+Add new line at the top to import the new variable from demo_config.ts. 
 
 ```
-import { lookerHost, dashboardId, dashboardStateFilter } from './demo_config'
+import {  dashboardStateFilter } from './demo_config'
 ```
 
 Add this to LookerEmbedSDK above `.build()`
@@ -35,6 +32,7 @@ Add this to LookerEmbedSDK above `.build()`
 Changing the theme: Can I change the CSS, colors, font?
 
 Add this to the LookerEmbedSDK above `.build()`
+
 ```
 .withTheme('sko')
 ```
@@ -42,13 +40,15 @@ Add this to the LookerEmbedSDK above `.build()`
 Bonus: Add in a special theme for this user's external group_id. Change `withTheme()` to
 
 ```
-.withTheme( (user.external_group_id == 'customerABC') ? 'sko' : '' )
+.withTheme( (user.external_group_id == 'group2') ? 'sko' : 'ugly' )
 ```
 The logic above says:
-> If external_group_id == customerABC then display dialpad theme, else use currency_white theme
+> If external\_group_id is equal to group2, then display the sko theme, else use ugly theme
+
+Feel free to revert it :)
 
 ### Adding basic custom filters
-We need a select dropdown and state options to change the state. Add this righ after `<h3>SKO 2020 Embed SDK Walkthrough</h3>`
+We need a select dropdown and state options to change the state. Add this right after `<h3>SKO 2020 Embed SDK Walkthrough</h3>` on line XX
 
 ```
   <select id="select-dropdown">
@@ -58,9 +58,10 @@ We need a select dropdown and state options to change the state. Add this righ a
     <option value="Minnesota">Minnesota</option>
   </select>
 ```
-This puts the dropdown with California selected (our default filter from above). But when we change it, nothing happens. What we want to do is listen for the change in the dropdown and apply it to the iframe using [Javascript Events](https://docs.looker.com/reference/embedding/embed-javascript-events). The Embed SDK facilitates the communication by providing build in functions.
 
-In the series of functions(?) within `LookerEmbedSDK` in `demo.ts` we have a `.then(setupDashboard)`. What this says is after we've connected the iframe to the page, we want to run the `setupDashboard` function. In this function, we'll want to listen to a change of the dropdown and apply the new value to the iframe. replace the current blank `const setupDashboard = (...)...{...}` block with this
+This puts the dropdown with California selected (our default filter from above). But when we change it, nothing happens. What we want to do is listen for the change in the dropdown and apply it to the iframe using [Javascript Events](https://docs.looker.com/reference/embedding/embed-javascript-events) and the EmbedSDK. The Embed SDK facilitates the communication by providing built-in functions to listen and respond to these events
+
+Looking at the code block in `demo.ts` after the `LookerEmbedSDK`  in we have a `.then(setupDashboard)`. What this says is after we've connected the iframe to the page, we want to run the `setupDashboard` function. In this function, we'll want to listen to a change of the dropdown and apply the new value to the iframe. replace the current blank `const setupDashboard = (...)...{...}` block with this
 
 ```
 const setupDashboard = (dashboard: LookerEmbedDashboard) => {
@@ -71,17 +72,19 @@ const setupDashboard = (dashboard: LookerEmbedDashboard) => {
 }
 ```
 
-Your dashboard is now responding to your custom filter!
+Play around with the filter, your dashboard should be responding to the new dropdown. 
+
+**Note:** There may be some delay between the dropdown and the filter updating thats normal.
 
 Lets break down whats happening:
 
-1. When your dashboard loads, we fun the `setupDashboard` function.
+1. When your dashboard loads, the `setupDashboard` function runs.
 2. In this function, we find the element responsible for changing the dropdown, `select-dropdown`, and save it as a variable, `dropdown`
 3. When we find it, we add a listener to it; every time the value changes, we then perform an action.
 4. The action we perform is to run `dashboard.updateFilters()`, the Embed SDK function provided to us to facilitate communication to the iframe. Instead of relying on writing your own [postMessage() event](https://docs.looker.com/reference/embedding/embed-javascript-events#posting_the_request_to_the_iframes_contentwindow_property)
-5. We send a JSON object, and the iframe responds only to the values we've placed in the JSON object (notice how our other filters don't change.
+5. We send a JSON object of the filters we want to apply; we don't need to give all of them, just the ones we want to change. The iframe respo.nds only to the values we've placed in the JSON object; notice how our other filters don't change
 
-Let's embellish this and run the dashboard everytime the value changes. On line XX, within the `dropdown.addEventListener(...{...})`, after the `dashbpard.updateFilters`insert a `dashboard.run()`
+It would be nice if we didn't have to hit the run button so much, for a dropdown like this, we can run right after we've selected it. On line XX, within the `dropdown.addEventListener(...{...})`, after the `dashbpard.updateFilters`insert a `dashboard.run()`
 
 You full setupDashboard will look like this now.
 
@@ -124,17 +127,19 @@ The `page:properties:changed` event looks like this:
 }
 ```
 
-First lets create a new function at the bottom that will listen to the event and apply the change to the height of the element that contains the iframe.
+First lets create a new function at the bottom of `demo.ts` that will listen to the event and apply the change to the height of the element that contains the iframe.
 
 ```
 function changeHeight( event: any ) {
   console.log(event)
   const div = document.getElementById('dashboard')
   if (event && event.height && div) {
-    div.style.height = `${event.height}px`
+    div.style.height = `${event.height+15}px`
   }
 }
 ```
+
+We have it a little bit of a buffer by adding `15` pixels. 
 
 Then within the EmbedSDK code we need to tell it to perform this function when it receives the `page:properties:changed` event.
 

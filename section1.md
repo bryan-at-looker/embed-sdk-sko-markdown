@@ -7,23 +7,27 @@ Now that you've got a pared down version of the EmbedSDK installed; you will nee
 
 ### .env: Environment variables
 
-On your command line; rename .env.example to .env. ```
+On your command line in the integrated terminal; rename a couple files
+
+```
 mv .env.example .env
+mv ./demo/demo_user.json.example ./demo/demo_user.json
 ```
 
 The Embed SDK uses `dotenv` a common Node package that will look for a `.env` and load them up for you.  For light reading on environment variables you can read [this article](https://medium.com/chingu/an-introduction-to-environment-variables-and-how-to-use-them-f602f66d15fa).
 
 In short, we use environment variables as a way to configure the server to store necessary information **on startup** like the host name and API credentials.
 
-Navigate to your .env and fill in your API id and secret in `LOOKERSDK_CLIENT_ID`, `LOOKESDK_CLIENT_SECRET`, `LOOKERSDK_BASE_URL`, and `LOOKER_EMBED_HOST`. If you don't have API credentials yet, log into your Looker instance and follow the directions [here](https://docs.looker.com/admin-options/settings/users#api3_keys). For the base url, follow the format as in the example. embed host without the https and base url with https and API port.
+Navigate to your .env and fill in your API id and secret in `LOOKERSDK_CLIENT_ID`, `LOOKESDK_CLIENT_SECRET`. If you don't have API credentials yet, log into your Looker instance and follow the directions [here](https://docs.looker.com/admin-options/settings/users#api3_keys). For the base url, follow the format as in the example. embed host without the https and base url with https and API port.
 
 Now that the .env is configured, lets start up the server.
 
 ```
 npm install
-// fix the bug for StringDecoder in readable-stream
+## fix the bug for StringDecoder in readable-stream
 awk '{gsub(/: StringDecoder/,": any")}1' ./node_modules/@types/readable-stream/index.d.ts > tmp.txt && mv ./tmp.txt ./node_modules/@types/readable-stream/index.d.ts
 echo '127.0.0.1 embed.demo' | sudo tee -a /etc/hosts
+## You will need to enter your laptops password to change the /etc/hosts file
 npm start
 
 ```
@@ -33,18 +37,14 @@ Webpage pops up, but there is nothing on it besides the header. Lets start confi
 
 ###  demo_config.ts: Frontend Configs
 
-Open up the `demo_config.ts` file change your lookerHost to XX
+Open up the `demo_config.ts` within the demo folder and change your dashboard_id to dashboard 5.
 
 ```js
-// The address of your Looker instance. Required.
-export const lookerHost = 'sko2020.dev.looker.com'
-// A dashboard that the user can see. Set to 0 to disable dashboard.
-export const dashboardId = 5
-
+export const dashboard_id = 5
 ```
-Both of these configurations are used by the EmbedSDK to create an SSO URL ([docs](https://docs.looker.com/reference/embedding/sso-embed)) for an application user which will see Looker dashboards, looks and explores.
+This configuration is used by the EmbedSDK to create an SSO URL ([docs](https://docs.looker.com/reference/embedding/sso-embed)) for an application user which will see Looker dashboards, looks and explores.
 
-Hot reload is turned on, if you change a configuration on the frontend, you should see that change made immediately. You should see your dashboard, but its tiny.
+Hot reload is turned on, if you change a configuration that affects the frontend, you should see that change made immediately. In this case, the dashboard id is used in your browser, so navigating back should show you a tiny dashboard.
 
 ## CSS Intro
 An important part of web development is styling the pages and how they interact with your browser. The base of it being how elements are sized, shaped, positioned and styled through CSS. We have a very tiny dashboard because it has not been told to be bigger. We will use CSS for that
@@ -86,16 +86,16 @@ And we have a normal sized dashboard :party:
 
 Lets walkthrough what exactly is happening to make this work:
 
-1. In `demo.ts` on line XX, you can see `LookerEmbedSDK.init(lookerHost, '/auth')`. This tells the Embed SDK that I'm going to use the lookerHost variable from `demo_config.ts` and the `/auth` API endpoint to generate an SSO embed URL
-2. Then on line XX, `LookerEmbedSDK.createDashboardWithId(dashboardId)` is the start of the Embed SDK where we instantiate a dashboard via the dashboardId variable from `demo_config.ts`.
+1. In `demo/demo.ts` on line XX, you can see `LookerEmbedSDK.init(lookerHost, '/auth')`. This tells the Embed SDK that I'm going to use the looker_host variable from `demo_config.ts` and the `/auth` API endpoint to generate an SSO embed URL
+2. Then on line XX, `LookerEmbedSDK.createDashboardWithId(dashboardId)` is the start of the Embed SDK where we instantiate a dashboard via the dashboardId variable from `demo/demo_config.ts`.
 3. The `.build()` and  `.connect()` then use the dashboardId and lookerHost and send it to the `/auth` endpoint to generate the SSO embed URL.
 4. The `/auth` endpoint is a server thats running on your laptop that simulates a backend service yoru customers may have in production. We send a request to the backend asking for an SSO embed URL; you can find it in `webpack-devserver.config.js` on line XX.
-5. This takes API receives from the generated URL from the Embed SDK (`/embed/dashboards/715?embed_doman=...`) and the host from `demo_config.ts` and the user from `demo_user.json` and passes it to a function called `createSignedUrl()`
-6. `createSignedUrl()` can be found in `auth_utils/auth_utils.js` and uses our new Typescript/JS SDK to create an API session and create the signed embed url to send back to the browser. The new API SDK will log us in automatically using our environment variables we placed in `.env`; all thats needed after setup is `const sso_obj = await sdk.ok(sdk.create_sso_embed_url(sso_url_params))`. Wait we're using the API for this? More on this in Section 4.
+5. This takes API receives from the generated URL from the Embed SDK (`/embed/dashboards/5?embed_doman=...`) and the host from `demo/demo_config.ts` and the user from `demo/demo_user.json` and passes it to a function called `createSignedUrl()`
+6. `createSignedUrl()` can be found in `auth_utils/auth_utils.js` and uses our new Typescript/JS SDK to create an API session and create the signed embed url to send back to the browser. The new API SDK will log us in automatically using our environment variables we placed in `.env`; all thats needed after setup is `const sso_obj = await sdk.ok(sdk.create_sso_embed_url(sso_url_params))`. Wait we're using the API for this? More on this in Section 4. No more embed secret resets?!
 7. The signed url will then be put into the `src` property of an iframe. By having the line `.appendTo('#dashboard')`, the iframe will placed in the element that has an id of `dashboard`; `<div id="dashboard"></div>`.
 8. The dashboard is also being applied with a classname of `looker-embed` through the line `looker-embed` which sizes it appropriately on the page.
 
-There is A LOT happening here with just a few lines of configuration. That is the baseline of what the EmbedSDK is great at, with just a few lines of configuration, you can provide advanced capabilities of the Looker embed without going into  the complexities of the code underneath.
+There is A LOT happening here with just a few lines of configuration. That is the baseline of what the EmbedSDK is great at, with just a few lines of configuration, you can provide advanced capabilities of the Looker embed without going into the complexities of the code underneath. We will be building on this concept through the sections.
 
 
 ### Change the user in demo/demo_user.json
@@ -143,6 +143,6 @@ This file does not live update like the others since demo_user.json is picked up
 
 Changing the json file gave the user more permissions like the ability to explore from the dashboard we embedded. Check to make sure you can explore.
 
-This is similar to an environment variable in our context because only our server is using this information; we don't want the user to be able to choose their external_group_id and user_attributes.
+This is similar to an environment variable in our context because only our server is using this information; we don't want the user to be able to choose their own external_group_id and user_attributes.
 
-Now everything is configured and ready for us to start playing with configuring properties for the EmbedSDK.
+Now everything is configured and ready for us to start playing with configuring properties sfor the EmbedSDK.

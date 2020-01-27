@@ -9,7 +9,7 @@ Add this to `demo_config.ts` at the bottom
 
 ```
 // the name of the filter on the dashboard for state
-export const dashboardStateFilter = 'State'
+export const dashboard_state_filter = 'State'
 ```
 
 In `demo.ts`:
@@ -17,14 +17,14 @@ In `demo.ts`:
 Add new line at the top to import the new variable from demo_config.ts.
 
 ```
-import {  dashboardStateFilter } from './demo_config'
+import {  dashboard_state_filter } from './demo_config'
 ```
 
 Add this to LookerEmbedSDK above `.build()`
 
 
 ```
-.withFilters({[dashboardStateFilter]: 'California'})
+.withFilters({[dashboard_state_filter]: 'California'})
 
 ```
 
@@ -67,7 +67,7 @@ Looking at the code block in `demo.ts` after the `LookerEmbedSDK.createDashboard
 const setupDashboard = (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
-  dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value }) })
+  dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboard_state_filter]: (event.target as HTMLSelectElement).value }) })
   }
 }
 ```
@@ -93,7 +93,7 @@ const setupDashboard = (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
     dropdown.addEventListener('change', (event) => {
-      dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value })
+      dashboard.updateFilters({ [dashboard_state_filter]: (event.target as HTMLSelectElement).value })
       dashboard.run()
     })
   }

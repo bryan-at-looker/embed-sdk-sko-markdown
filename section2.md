@@ -82,11 +82,11 @@ Lets break down whats happening:
 2. In this function, we find the element responsible for changing the dropdown, `select-dropdown`, and save it as a variable, `dropdown`
 3. When we find it, we add a listener to it; every time the value changes, we then perform an action.
 4. The action we perform is to run `dashboard.updateFilters()`, the Embed SDK function provided to us to facilitate communication to the iframe. Instead of relying on writing your own [postMessage() event](https://docs.looker.com/reference/embedding/embed-javascript-events#posting_the_request_to_the_iframes_contentwindow_property)
-5. We send a JSON object of the filters we want to apply; we don't need to give all of them, just the ones we want to change. The iframe respo.nds only to the values we've placed in the JSON object; notice how our other filters don't change
+5. We send a JSON object of the filters we want to apply; we don't need to give all of them, just the ones we want to change. The iframe responds only to the values we've placed in the JSON object; notice how our other filters don't change
 
-It would be nice if we didn't have to hit the run button so much, for a dropdown like this, we can run right after we've selected it. On line XX, within the `dropdown.addEventListener(...{...})`, after the `dashbpard.updateFilters`insert a `dashboard.run()`
+It would be nice if we didn't have to hit the run button so much, for a dropdown like this, we can run right after we've selected it. On line XX, within the `dropdown.addEventListener(...{...})`, after the `dashboard.updateFilters` line, insert a new line and paste `dashboard.run()`
 
-You full setupDashboard will look like this now.
+Your full setupDashboard will look like this now.
 
 ```
 const setupDashboard = (dashboard: LookerEmbedDashboard) => {

@@ -141,7 +141,7 @@ function changeHeight( event: any ) {
 
 We have it a little bit of a buffer by adding `15` pixels.
 
-Then within the EmbedSDK code we need to tell it to perform this function when it receives the `page:properties:changed` event.
+Then within the EmbedSDK code (still in our `demo.ts` file) we need to tell it to perform the function below when it receives the `page:properties:changed` event. Copy and paste this function on its own line above `build()`:
 
 ```
 .on('page:properties:changed', changeHeight )

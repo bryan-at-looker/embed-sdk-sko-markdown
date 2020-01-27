@@ -47,10 +47,10 @@ The above code
  Lets move to `webpack-devserver.config.js` and include this new `/token` endpoint after the first `.get()` is closed.
 
  ```
-    app.get('/token', async function(req, res) {
-      const token = await accessToken(user.external_user_id);
-      res.json( token );
-    });
+app.get('/token', async function(req, res) {
+  const token = await accessToken(user.external_user_id);
+  res.json( token );
+});
 ```
 
  Then import the function we need, `accessToken`, into `webpack-devserver.config.js` as well. Place this line near the top.
@@ -61,15 +61,15 @@ var { accessToken } = require('./server_utils/auth_utils')
 
  Now lets create the endpoint in `server_utils/auth_utils.ts`, at the end of the file create the `accessToken` function
 
- ```
+```
 export async function accessToken (external_user_id: string) {
-      var user = await sdk.ok(sdk.user_for_credential('embed',external_user_id))
-      if (user && user.id) {
-        return await sdk.ok(sdk.login_user(user['id']))
-      } else {
-        return {}
-      }
-    }
+  var user = await sdk.ok(sdk.user_for_credential('embed',external_user_id))
+  if (user && user.id) {
+    return await sdk.ok(sdk.login_user(user['id']))
+  } else {
+    return {}
+  }
+}
 ```
 
  These were all backend server changes, so we need to restart the server. Go to your terminal and press Command+C; then `npm start` to start it again.

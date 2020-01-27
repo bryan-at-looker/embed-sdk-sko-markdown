@@ -61,7 +61,7 @@ We need a select dropdown and state options to change the state. Navigate to you
 
 This puts the dropdown with California selected (our default filter from above). But when we change it, nothing happens. What we want to do is listen for the change in the dropdown and apply it to the iframe using [Javascript Events](https://docs.looker.com/reference/embedding/embed-javascript-events) and the EmbedSDK. The Embed SDK facilitates the communication by providing built-in functions to listen and respond to these events
 
-Looking at the code block in `demo.ts` after the `LookerEmbedSDK`  in we have a `.then(setupDashboard)`. What this says is after we've connected the iframe to the page, we want to run the `setupDashboard` function. In this function, we'll want to listen to a change of the dropdown and apply the new value to the iframe. replace the current blank `const setupDashboard = (...)...{...}` block with this
+Looking at the code block in `demo.ts` after the `LookerEmbedSDK.createDashboardWithId(dashboard_id)`  in we have a `.then(setupDashboard)`. What this says is after we've connected the iframe to the page, we want to run the `setupDashboard` function. In this function, we'll want to listen to a change of the dropdown and apply the new value to the iframe. replace the current blank `const setupDashboard = (...)...{...}` block with this
 
 ```
 const setupDashboard = (dashboard: LookerEmbedDashboard) => {

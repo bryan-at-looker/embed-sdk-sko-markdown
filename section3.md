@@ -44,7 +44,7 @@ The above code
 
  We don't have an endpoint yet to grab an authorization token from the API;
 
- Lets move back to `webpack-devserver.config.js` and include this new `/token` endpoint on line XX.
+ Lets move to `webpack-devserver.config.js` and include this new `/token` endpoint after the first `.get()` is closed.
 
  ```
     app.get('/token', async function(req, res) {
@@ -53,7 +53,7 @@ The above code
     });
 ```
 
- Then import the function we need `accessToken` by updating the `webpack-devserver.config.js` file. Place this line at the top.
+ Then import the function we need, `accessToken`, into `webpack-devserver.config.js` as well. Place this line near the top.
 
  ```
 var { accessToken } = require('./server_utils/auth_utils')

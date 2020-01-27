@@ -9,7 +9,7 @@ Add this to `demo_config.ts` at the bottom
 
 ```
 // the name of the filter on the dashboard for state
-export const dashboardStateFilter = 'State'
+export const dashboard_state_filter = 'State'
 ```
 
 In `demo.ts`:
@@ -17,14 +17,14 @@ In `demo.ts`:
 Add new line at the top to import the new variable from demo_config.ts.
 
 ```
-import {  dashboardStateFilter } from './demo_config'
+import {  dashboard_state_filter } from './demo_config'
 ```
 
 Add this to LookerEmbedSDK above `.build()`
 
 
 ```
-.withFilters({[dashboardStateFilter]: 'California'})
+.withFilters({[dashboard_state_filter]: 'California'})
 
 ```
 
@@ -61,13 +61,13 @@ We need a select dropdown and state options to change the state. Navigate to you
 
 This puts the dropdown with California selected (our default filter from above). But when we change it, nothing happens. What we want to do is listen for the change in the dropdown and apply it to the iframe using [Javascript Events](https://docs.looker.com/reference/embedding/embed-javascript-events) and the EmbedSDK. The Embed SDK facilitates the communication by providing built-in functions to listen and respond to these events
 
-Looking at the code block in `demo.ts` after the `LookerEmbedSDK`  in we have a `.then(setupDashboard)`. What this says is after we've connected the iframe to the page, we want to run the `setupDashboard` function. In this function, we'll want to listen to a change of the dropdown and apply the new value to the iframe. replace the current blank `const setupDashboard = (...)...{...}` block with this
+Looking at the code block in `demo.ts` after the `LookerEmbedSDK.createDashboardWithId(dashboard_id)`  in we have a `.then(setupDashboard)`. What this says is after we've connected the iframe to the page, we want to run the `setupDashboard` function. In this function, we'll want to listen to a change of the dropdown and apply the new value to the iframe. replace the current blank `const setupDashboard = (...)...{...}` block with this
 
 ```
-const setupDashboard = (dashboard: LookerEmbedDashboard) => {
+const setupDashboard = async (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
-  dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value }) })
+  dropdown.addEventListener('change', (event) => { dashboard.updateFilters({ [dashboard_state_filter]: (event.target as HTMLSelectElement).value }) })
   }
 }
 ```
@@ -82,18 +82,18 @@ Lets break down whats happening:
 2. In this function, we find the element responsible for changing the dropdown, `select-dropdown`, and save it as a variable, `dropdown`
 3. When we find it, we add a listener to it; every time the value changes, we then perform an action.
 4. The action we perform is to run `dashboard.updateFilters()`, the Embed SDK function provided to us to facilitate communication to the iframe. Instead of relying on writing your own [postMessage() event](https://docs.looker.com/reference/embedding/embed-javascript-events#posting_the_request_to_the_iframes_contentwindow_property)
-5. We send a JSON object of the filters we want to apply; we don't need to give all of them, just the ones we want to change. The iframe respo.nds only to the values we've placed in the JSON object; notice how our other filters don't change
+5. We send a JSON object of the filters we want to apply; we don't need to give all of them, just the ones we want to change. The iframe responds only to the values we've placed in the JSON object; notice how our other filters don't change
 
-It would be nice if we didn't have to hit the run button so much, for a dropdown like this, we can run right after we've selected it. On line XX, within the `dropdown.addEventListener(...{...})`, after the `dashbpard.updateFilters`insert a `dashboard.run()`
+It would be nice if we didn't have to hit the run button so much, for a dropdown like this, we can run right after we've selected it. On line XX, within the `dropdown.addEventListener(...{...})`, after the `dashboard.updateFilters` line, insert a new line and paste `dashboard.run()`
 
-You full setupDashboard will look like this now.
+Your full setupDashboard will look like this now.
 
 ```
-const setupDashboard = (dashboard: LookerEmbedDashboard) => {
+const setupDashboard = async (dashboard: LookerEmbedDashboard) => {
   const dropdown = document.getElementById('select-dropdown')
   if (dropdown) {
     dropdown.addEventListener('change', (event) => {
-      dashboard.updateFilters({ [dashboardStateFilter]: (event.target as HTMLSelectElement).value })
+      dashboard.updateFilters({ [dashboard_state_filter]: (event.target as HTMLSelectElement).value })
       dashboard.run()
     })
   }
@@ -102,7 +102,7 @@ const setupDashboard = (dashboard: LookerEmbedDashboard) => {
 
 This will now change the filter and run the dashboard everytime the value is changed.
 
-Another common ask is to make sure that multiple scrollbars don't appear, one within the iframe and one on the parent page.
+Another common ask is to make sure that multiple scrollbars don't appear, one within the iframe and one on the parent page (you wont see this in your example right now, but good to know for the future)
 
 ![HTML height](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section2-height-scroll-before.png?raw=true)
 
@@ -141,7 +141,7 @@ function changeHeight( event: any ) {
 
 We have it a little bit of a buffer by adding `15` pixels.
 
-Then within the EmbedSDK code we need to tell it to perform this function when it receives the `page:properties:changed` event.
+Then within the EmbedSDK code (still in our `demo.ts` file) we need to tell it to perform the function below when it receives the `page:properties:changed` event. Copy and paste this function on its own line above `build()`:
 
 ```
 .on('page:properties:changed', changeHeight )

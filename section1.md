@@ -7,7 +7,7 @@ Now that you've got a pared down version of the EmbedSDK installed; you will nee
 
 ### .env: Environment variables
 
-On your command line in the integrated terminal; rename a couple files
+On your command line in the integrated terminal (VS Code); rename a couple files
 
 ```
 mv .env.example .env
@@ -18,16 +18,21 @@ The Embed SDK uses `dotenv` a common Node package that will look for a `.env` an
 
 In short, we use environment variables as a way to configure the server to store necessary information **on startup** like the host name and API credentials.
 
-Navigate to your .env and fill in your API id and secret in `LOOKERSDK_CLIENT_ID`, `LOOKESDK_CLIENT_SECRET`. If you don't have API credentials yet, log into your Looker instance and follow the directions [here](https://docs.looker.com/admin-options/settings/users#api3_keys). For the base url, follow the format as in the example. embed host without the https and base url with https and API port.
+Navigate to your .env and fill in your API id and secret in `LOOKERSDK_CLIENT_ID`, `LOOKESDK_CLIENT_SECRET`. If you don't have API credentials yet, log into your Looker instance and follow the directions [here](https://docs.looker.com/admin-options/settings/users#api3_keys).
 
 Now that the .env is configured, lets start up the server.
 
 ```
 npm install
-## fix the bug for StringDecoder in readable-stream
+
+## fix the bug for StringDecoder in readable-stream:
+
 awk '{gsub(/: StringDecoder/,": any")}1' ./node_modules/@types/readable-stream/index.d.ts > tmp.txt && mv ./tmp.txt ./node_modules/@types/readable-stream/index.d.ts
+
 echo '127.0.0.1 embed.demo' | sudo tee -a /etc/hosts
+
 ## You will need to enter your laptops password to change the /etc/hosts file
+
 npm start
 
 ```

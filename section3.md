@@ -19,7 +19,7 @@ import { LookerSDK, IApiSettings, AuthToken, IError, CorsSession } from '@looker
 ```
 
 
-Then lets instantiate it by placing this at line XX.
+Then lets instantiate it by placing this at line XX (right underneath the import lines).
 
 ```
 let sdk: LookerSDK

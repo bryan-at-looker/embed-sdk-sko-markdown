@@ -1,12 +1,12 @@
 # Section 4: API Introductions
 
-Remove the options from your dropdown in the HTML. In `index.html` You're going to want to remove several lines of code starting after `<select id="select-dropdown">` and before `</select>`; you will be removing all the options. Paste the below into that spot you just removed.
+Remove the options from your dropdown in the HTML (in `index.html`). You're going to want to remove several lines of code starting after `<select id="select-dropdown">` and before `</select>`; you will be removing all the options. Paste the below into that spot you just removed.
 
  ```
     <option value="">Select...</option>
 
  ```
- 
+
 We're going to be running a query from within the front end. Lets create a couple variables that we wil use to make the API call. Place this at the bottom of the `demo_config.ts`
 
 ```js
@@ -44,7 +44,7 @@ function addStateOptions(data: any) {
         dropdown.children[i+1].replaceWith(new_option)
       } else {
         dropdown.appendChild(new_option)
-      } 
+      }
     }
   })
 }
@@ -53,8 +53,8 @@ function addStateOptions(data: any) {
 We have to get the list of states so lets run an API call that grabs all states and passes it to our new function. We will want to run this after the dashboard loads, so place it after our first API call `sdk.me()` within the function `setupDashboard(...)`
 
 ```js
-  const states = await sdk.ok(sdk.run_inline_query( 
-    { 
+  const states = await sdk.ok(sdk.run_inline_query(
+    {
       body: query_object,
       result_format: 'json'
     }
@@ -65,13 +65,13 @@ We have to get the list of states so lets run an API call that grabs all states 
 We've got a nice long list of states / counties in there, lets narrow that down to 50. Move to `demo_user.json` and give the user a country user attribute like this:
 
 ```
-  "user_attributes": { 
+  "user_attributes": {
     "locale": "en_US",
     "country": "USA"
   }
 ```
 
-Remember anything you are changing about your user is only done server side, so in this case you need to go to your terminal and Control+C to exit the server and then `npm start` to start it up again. 
+Remember anything you are changing about your user is only done server side, so in this case you need to go to your terminal and Control+C to exit the server and then `npm start` to start it up again.
 
 Check your dropdown, you should just see the US states. Remember, we've setup the embed SDK to only make API calls as that user, we can now keep everything in sync from model to iframe to API calls.
 
@@ -99,13 +99,13 @@ function addStateOptions(data: any) {
       new_option.value = row[query_field_name]
       new_option.innerHTML = `${i+1}) ${row[query_field_name]}`
       dropdown.appendChild(new_option)
-      
+
       // replace or create the dropdown item
       if (dropdown.children[i+1]) {
         dropdown.children[i+1].replaceWith(new_option)
       } else {
         dropdown.appendChild(new_option)
-      } 
+      }
     }
   })
 }
@@ -131,7 +131,7 @@ import { dashboard_date_filter, query_date_filter } from './demo_config'
 ```
 
 
-Create new function for when the dashboard filters update for date in `demo.ts`. You can put this at the very bottom of the file.	
+Create new function for when the dashboard filters update for date in `demo.ts`. You can put this at the very bottom of the file.
 
 ```js
 async function filtersUpdates( event: any ) {
@@ -142,12 +142,12 @@ async function filtersUpdates( event: any ) {
   let new_filters = query_object.filters
 
   // update query object and run query
-  
+
   if (dashboard_filters && ( dashboard_date_filter in dashboard_filters ) ) { // check to make sure our filter is in the changed
     if (dropdown) { // check to make sure we found our elements to update/keep
       new_filters = Object.assign(new_filters, { [query_date_filter]: dashboard_filters[dashboard_date_filter] })
-      const states = await sdk.ok(sdk.run_inline_query( 
-        { 
+      const states = await sdk.ok(sdk.run_inline_query(
+        {
           body: Object.assign(query_object, { filters: new_filters }),
           result_format: 'json'
         }

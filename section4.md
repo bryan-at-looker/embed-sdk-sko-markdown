@@ -113,6 +113,12 @@ function addStateOptions(data: any) {
 
 ### Keep dashboard filters in sync with API calls
 
+30 days drpdown
+![30 days](./images/section5-state-top10-30days.png)
+
+7 days drpdown
+![7 days](./images/section5-state-top10-7days.png)
+
 We're now showing "Trending States" in the dropdown and giving the end user context to the order (no magnitude... yet). But its static to our initial query, top states of all time by gross margin. An idea to make it more dynamic is to have the dropdown respond to the changes from within the iframe. When a user changes the date filter, maybe we change the dropdown too? Here is how you would do that.
 
 Create new constants in `demo_config.ts` (paste this at the end of the file):

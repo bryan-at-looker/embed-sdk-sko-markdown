@@ -164,4 +164,4 @@ Then lets add the listener from the Embed SDK (in your `demo.ts` file) to call t
 .on('dashboard:filters:changed', filtersUpdates)
 ```
 
-Change the date filter on the dashboard and check the dropdown list, usually you'll see some movements
+Change the date filter on the dashboard and check the dropdown list, usually you'll see some movements in states 8-10.

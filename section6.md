@@ -178,7 +178,7 @@ This is just an example of drillClick putting data into other parts of the appli
 
 ### Create as dashboard dropdown
 
-insert a new dropdown in `index.html`. Starting on line 49 insert the new dropdown divs
+insert a new dropdown in `index.html`. After `<div id="dropdown-selected"></div>` insert the new dropdown divs:
 
 ```html
       <div id="select-dashboard" class="ui selection violet dropdown">

@@ -191,7 +191,7 @@ insert a new dropdown in `index.html`. After `<div id="dropdown-selected"></div>
       </div>
 ```
 
-Within the <script> tag at the bottom of the page, insert this after the new function to handle the dropdown clicks
+Within the script tag at the bottom of the page, insert this after the new function to handle the dropdown clicks:
 
 ```js
     $('#select-dashboard')
@@ -199,9 +199,9 @@ Within the <script> tag at the bottom of the page, insert this after the new fun
     ;
 ```
 
-Create a function that listens to the changes of the dropdowns, makes an api call to get all the dashboards avialable to the user, and will reset the iframe when it is selected.
+Create a function that responds to the changes of the dropdowns, makes an api call to get all the dashboards avialable to the user, and will reset the iframe when it is selected.
 
-Place this function at the bottom of `demo.ts`
+Place this function at the bottom of `demo.ts` (there will be an error, we will fix it in the next few commands):
 
 
 ```js
@@ -239,27 +239,31 @@ function dashboardItem (db: any) {
 }
 ```
 
-You'll also need to update the first line of the `embedSdkInit` function. Replace line XX with below
+You'll also need to update the first line of the `embedSdkInit` function. Replace `function embedSdkInit` with the below code:
 
 ```js
 function embedSdkInit ( dashboard_id: any ) {
 ```
 
-At the top of the file, replace line XX with
+At the top of the file, replace `document.addEventListener` with:
 
 ```js
 document.addEventListener('DOMContentLoaded', ()=>embedSdkInit(dashboard_id))
 ```
 
-### use local storage for remembering dashboard
+Now include this function within the `setupDashboard` const:
 
-store the dashboard selection, on line XX within the `change` function
+`addDashboardOptions()`
+
+### Use local storage for remembering dashboard
+
+When the user selects the dropdown, we want to store the value in their local storage. Add the following within the `addDashboardsOptions` function, after `dashboard_dropdown_parent.addEventListener`:
 
 ```
 localStorage.setItem('dashboard', (event.target as HTMLSelectElement).value )
 ```
 
-update the `DOMContentLoaded` function on line XX to include the `getAttribute`
+Replace the `DOMContentLoaded` listener with the following:
 
 ```js
 document.addEventListener('DOMContentLoaded', ()=> {

@@ -52,7 +52,7 @@ We need a select dropdown with state options to change the state filter. In `ind
   <select id="select-dropdown">
     <option value="">Select...</option>
     <option value="California" selected>California</option>
-    <option value="Colorado" selected>California</option>
+    <option value="Colorado">Colorado</option>
     <option value="Illinois">Illinois</option>
     <option value="New York">New York</option>
     <option value="Texas">Texas</option>

@@ -7,7 +7,7 @@ Remove the options from your dropdown in the HTML (in `index.html`). You're goin
 ```
 
 
-We're going to be running a query from within the front end. Lets create a couple variables that we wil use to make the API call. Place this at the bottom of the `demo_config.ts`
+We're going to be running a query from within the frontend.  Let's create a few variables that we'll use to make the API call.  Place this at the bottom of `demo_config.ts`:
 
 ```js
 export const query_object = {
@@ -21,13 +21,13 @@ export const query_object = {
 export const query_field_name = 'users.state'
 ```
 
-Place this with the other imports near the top of `demo.ts`
+Place this with the other imports near the top of `demo.ts`:
 
 ```
 import {  query_object, query_field_name } from './demo_config'
 ```
 
-At the bottom of demo.ts we will create a function that creates new `<option/>` HTML tags for us. We will send the function the list of states, and it will return the options for us.
+At the bottom of demo.ts we will add a function that creates new `<option/>` HTML tags for us. We will send the function the list of states, and it will return the options for us.
 
 ```js
 
@@ -50,7 +50,7 @@ function addStateOptions(data: any) {
 }
 ```
 
-We have to get the list of states so lets run an API call that grabs all states and passes it to our new function. We will want to run this after the dashboard loads, so place it after our first API call `sdk.me()` within the function `setupDashboard(...)`
+We have to get the list of states so let's run an API call that grabs all states and passes it to our new function.  We want to run this after the dashboard loads, so place it after our first API call `sdk.me()` within the function `setupDashboard(...)`
 
 ```js
   const states = await sdk.ok(sdk.run_inline_query(
@@ -62,7 +62,7 @@ We have to get the list of states so lets run an API call that grabs all states 
   addStateOptions(states)
 ```
 
-We've got a nice long list of states / counties in there, lets narrow that down to 50. Move to `demo_user.json` and give the user a country user attribute like this:
+Now check the dropdown - we've got a nice long list of states and locales in other countries; let's narrow that down to U.S. states. Move to `demo_user.json` and give the user a country user attribute like this:
 
 ```
   "user_attributes": {
@@ -71,9 +71,9 @@ We've got a nice long list of states / counties in there, lets narrow that down 
   }
 ```
 
-This is another server side change, so in this case you need to go to your terminal and Control+C to exit the server and then `npm start` to start it up again.
+This is another server side change, so in this case you need to go to your terminal and Control+C to exit the server and then `npm start`.
 
-Check your dropdown, you should just see the US states. Remember, we've setup the embed SDK to only make API calls as that user, we can now keep everything in sync from model to iframe to API calls.
+Check your dropdown, you should see just the U.S. states. Remember, we've setup the Embed SDK to make API calls only as that user - we can now keep everything in sync from model to iframe to API calls.
 
 Limit to the top 10 states by total gross margin. In`demo_config.ts` swap out the `query_object` for below.
 
@@ -88,7 +88,7 @@ export const query_object = {
 }
 ```
 
-Lets add a ranking in front of the states (eg. 1) California). In your `demo.ts` file, replace the entire  `addStateOptions` function with the block below:
+Let's add a ranking in front of the states (eg. 1) California). In your `demo.ts` file, replace the entire  `addStateOptions` function with the block below:
 
 ```js
 function addStateOptions(data: any) {
@@ -119,7 +119,7 @@ function addStateOptions(data: any) {
 7 days drpdown
 ![7 days](./images/section5-state-top10-7days.png)
 
-We're now showing "Trending States" in the dropdown and giving the end user context to the order (no magnitude... yet). But its static to our initial query, top states of all time by gross margin. An idea to make it more dynamic is to have the dropdown respond to the changes from within the iframe. When a user changes the date filter, maybe we change the dropdown too? Here is how you would do that.
+We're now showing "Trending States" in the dropdown and giving the end user context to the order (no magnitude... yet). But it's static to our initial query, top states of all time by gross margin. An idea to make it more dynamic is to have the dropdown respond to the changes from within the iframe. When a user changes the date filter, maybe we change the dropdown too? Here is how you would do that.
 
 Create new constants in `demo_config.ts` (paste this at the end of the file):
 
@@ -137,7 +137,7 @@ import { dashboard_date_filter, query_date_filter } from './demo_config'
 ```
 
 
-Create new function for when the dashboard filters update for date in `demo.ts`. You can put this at the very bottom of the file.
+Create a new function for when the dashboard filters update for date in `demo.ts`. You can put this at the very bottom of the file.
 
 ```js
 async function filtersUpdates( event: any ) {
@@ -164,10 +164,10 @@ async function filtersUpdates( event: any ) {
 }
 ```
 
-Then lets add the listener from the Embed SDK (in your `demo.ts` file) to call this function after it gets a filter changed (make sure you paste it before the `.build()`):
+Then let's add the listener from the Embed SDK (in your `demo.ts` file) to call this function after it gets a filter changed (make sure you paste it before the `.build()`):
 
 ```
 .on('dashboard:filters:changed', filtersUpdates)
 ```
 
-Change the date filter on the dashboard and check the dropdown list, usually you'll see some movements in states 8-10.
+Change the date filter on the dashboard and check the dropdown list (no need to actually run the dashbaord with the updated date filter).  Usually you'll see some movements in states 8-10.

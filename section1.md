@@ -1,6 +1,21 @@
 # Section 1: Familiarity with the Embed SDK
 
-Time: 10 minutes
+[Download VS Code here](https://code.visualstudio.com/download) (do it, it is great)
+
+Command+Shift+P, type in `Shell Command: Install ...` choose `Shell Command: Install 'code' in PATH`
+
+Leave the original embed SDK alone; start from scratch from this repo: Open up terminal
+
+```
+git clone https://github.com/bryan-at-looker/embed-sdk-sko
+cd embed-sdk-sko
+git checkout section0
+code .
+```
+
+Command+Shift+P, type in `create new integrated terminal`
+
+A terminal appears at the bottom, thats where we'll be doing the rest of our commands.
 
 ## Configuring your setup
 Now that you've got a pared down version of the Embed SDK installed; you will need to configure it to talk to your Looker instance. In this example we are going to use environment variables and configurations in javascript.

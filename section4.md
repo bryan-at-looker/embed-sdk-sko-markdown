@@ -88,7 +88,7 @@ export const query_object = {
 }
 ```
 
-Lets add a ranking in front of the states (eg. 1) California). Replace the entire  `addStateOptions` function with the block below:
+Lets add a ranking in front of the states (eg. 1) California). In your `demo.ts` file, replace the entire  `addStateOptions` function with the block below:
 
 ```js
 function addStateOptions(data: any) {
@@ -158,7 +158,7 @@ async function filtersUpdates( event: any ) {
 }
 ```
 
-Then lets add the listener from the Embed SDK to call this function after it gets a filter changed
+Then lets add the listener from the Embed SDK (in your `demo.ts` file) to call this function after it gets a filter changed (make sure you paste it before the `.build()`):
 
 ```
 .on('dashboard:filters:changed', filtersUpdates)

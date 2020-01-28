@@ -1,17 +1,16 @@
 # Section 5
 
-pull in new skin: This will blow away anything you haven't saved.
+Pull in new skin: This will blow away anything you haven't saved.  From your Terminal window, Control+C, then type:
 
 ```
 git checkout re-skinner --force
 ```
 
+Now restart your server with 'npm start'
 
-It will feel very familiar, we've just added prepackaged styling from [Semantic UI](https://semantic-ui.com/). This is very similar to how you might use Looker components in the future, just using React.
-
+Wow!  New UI!  Dashboard Next!  But it will feel very familiar; we've just added prepackaged styling from [Semantic UI](https://semantic-ui.com/). This is very similar to how you might use Looker components in the future, just using React.
 
 Dynamic dashboard control starts with understanding what options we have to play with. We are going to start listening to the `dashboard:load` event to see the options that are available to us.
-
 
 Create a function at the bottom of `demo.ts` to track the load event
 
@@ -25,13 +24,13 @@ function loadEvent (event: any) {
 }
 ```
 
-Call the function when you see the load (in EmbedSDK)
+Call the function when you see the load, in Embed SDK, above `.build()`:
 
 ```js
 .on('dashboard:loaded', loadEvent)
 ```
 
-If you look at your console (Command+Option+J) you will see the options that are available to do dynamic dashboards. It will look something like this:
+If you look at your JavaScript console (Command+Option+J) you will see the OPTIONS that are available to do dynamic dashboards. It will look something like this:
 
 
 ```js
@@ -53,13 +52,13 @@ If you look at your console (Command+Option+J) you will see the options that are
 }
 ```
 
-Head over to the Looker documentation on [dashboard:loaded](https://docs.looker.com/reference/embedding/embed-javascript-events#dashboard:loaded) for more explanation and a full set of options.
+Head over to the Looker documentation on [dashboard:loaded](https://docs.looker.com/reference/embedding/embed-javascript-events#dashboard:loaded) for further explanation and a full set of options.
 
 In short: these are the properties of the dashboard we are allowed to change for dynamic dashboard control.
 
-The first thing we will try to change is every title on all the tiles. When we're selecting a dropdown, an idea that a designer might have is to reflect the state thats filtered on the tiles.
+The first thing we will try to change is every title on all the tiles.  When we're selecting a dropdown, an idea that a designer might have is to reflect the state that's filtered on the tiles.
 
-So lets create a function that will update the charts and graph tiles
+So let's create a function that will update the charts and graph tiles
 
 ![title change](./images/section5-title-changer.gif)
 
@@ -83,17 +82,18 @@ function changeTitles(elements: any, state: string) {
 }
 ```
 
-This function will loop through all the element keys and update the titles in each element. Single tile visualizations and other chart types have different title structures for display, so we have an if statement that updates the correct title for us. Once we've updated them all, we use our EmbedSDK variable, gDashboard to set the options to tell Looker to update; alternatively you could do this manually the old way with [Javascript Events](https://docs.looker.com/reference/embedding/embed-javascript-events#dashboard:options:set).
+This function will loop through all the element keys and update the titles in each element. Single tile visualizations and other chart types have different title structures for display, so we have an `if` statement that updates the correct title for us. Once we've updated them all, we use our Embed SDK variable, gDashboard, to set the options to tell Looker to update; alternatively you could do this manually the old way with [Javascript Events](https://docs.looker.com/reference/embedding/embed-javascript-events#dashboard:options:set).
 
-Now lets call this function where it makes most sense, the place where we listened for the dropdown change and updated the dashboard filters. Within the `setupDashboard function`, right after `dashboard.run()` you add the following:
+Now let's call this function where it makes most sense, the place where we listened for the dropdown change and updated the dashboard filters. Within the `setupDashboard` function, right after `dashboard.run()` add the following:
 
 ```js
     changeTitles(gOptions.elements,(event.target as HTMLSelectElement).value)
 ```
+Check the dashboard - you should see updated titles containing the state filtered on.
 
-In the case above we're both updating the visualization configuration and running at the dashboard so theres a reload. But the dashboard doesn't have to reload to set options. Lets take an example where we will change all of our visualizations to tables by clicking a button.
+In the case above, we're both updating the visualization configuration and running at the dashboard so there's a reload. But the dashboard doesn't have to reload to set options. Take an example where we will change all of our visualizations to tables by clicking a button.
 
-First lets create a function that accepts an input of the element we clicked on. Place this at the bottom of `demo.ts`:
+First create a function that accepts an input of the element we clicked on. Place this at the bottom of `demo.ts`:
 
 ```js
 function tableChange(table_icon: HTMLElement) {
@@ -112,7 +112,7 @@ function tableChange(table_icon: HTMLElement) {
   }
 }
 ```
-This function does the following
+This function does the following:
 
 1. Flips the color of the icon
 2. Flips the value associated to the icon
@@ -120,7 +120,7 @@ This function does the following
 4. If we're going to tables, it loops through each element and changes the vis_config.type to `looker_grid` then uses `.setOptions()` to set the visualization configuration
 5. If we're moving from tables, it takes the original element configurations and applies them.
 
-Now we need to call this function and pass it an HTML element for the button we're clicking. We can add this within the `setupDashboard` function underneath where we make our API calls for the first dropdown. You can put this starting on line XX.
+Now we need to call this function and pass it an HTML element for the button we're clicking. We can add this within the `setupDashboard` function underneath where we make our API calls for the first dropdown. You can put this after `loadingIcon(false)`:
 
 
 ```js
@@ -133,6 +133,12 @@ Now we need to call this function and pass it an HTML element for the button we'
 ```
 
 Click the table swap button to see the the dynamic dashboard control in action
+
+You'll notice that when you mouse over the table icon in upper right, the cursor doesn't change to indicate an action is availble for the table icon.  Simple fix to change the cursor from an arrow to a pointer - edit `index.html` and replace the line below:
+
+```js
+        <i id="table-swap" data-value="0" style="cursor: pointer;" class="big table icon violet"></i>
+```
 
 ![Table Swap](./images/section5-table-swap-icon.png)
 

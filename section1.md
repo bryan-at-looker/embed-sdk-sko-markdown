@@ -2,9 +2,9 @@
 
 [Download VS Code here](https://code.visualstudio.com/download) (do it, it is great)
 
-Command+Shift+P, type in `Shell Command: Install ...` choose `Shell Command: Install 'code' in PATH`
+When you open up VS Code, press Command+Shift+P, type in `Shell Command: Install ...` and choose the option `Shell Command: Install 'code' in PATH`
 
-Leave the original embed SDK alone; start from scratch from this repo: Open up terminal
+Move to your terminal and we're going to clone a different repository based off of the embed sdk
 
 ```
 git clone https://github.com/bryan-at-looker/embed-sdk-sko

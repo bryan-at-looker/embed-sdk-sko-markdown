@@ -2,40 +2,40 @@
 
 ### Saving dashboard filters using localstorage
 
-User changes a filter, can we save it and bring up the last values?
+A user changes a filter, can we save it and bring up the last values?
 
-Set at the end of filtersUpdates
+Set at the end of filtersUpdates in `demo.ts` file:
 
 ```js
   if (dashboard_filters) {
-    localStorage.setItem('dashboard_filters', JSON.stringify(dashboard_filters)); 
+    localStorage.setItem('dashboard_filters', JSON.stringify(dashboard_filters));
   }
 ```
 
-set this right before the EmbedSDK instantiation on line XX
+set this right before the EmbedSDK instantiation (after const logo =):
 
 ```
 const last_filters = JSON.parse(localStorage.getItem('dashboard_filters') || '{}');
 ```
 
-Then call last_filters using `withFilters()`; replace the current `withFilters()` with this
+Then call last_filters using `withFilters()`; replace the current `withFilters()` with this:
 
 ```
 .withFilters(last_filters)
 ```
 
-Set this on line XX where we are using listening to dropdown clicks and updating values. We will want to update the same values.
+When someone clicks a dropdown we need to set it as well. We're using JavaSript listeners to update these values. In your `demo.ts` file within the setupDashboard add the lines below after `dashboard.run()`:
 
 ```js
       const last_filters = JSON.parse(localStorage.getItem('dashboard_filters') || '{}');
-      localStorage.setItem('dashboard_filters', JSON.stringify(Object.assign(last_filters, new_filter)))
+      localStorage.setItem('dashboard_filters', JSON.stringify(Object.assign(last_filters, { [dashboard_state_filter]: (event.target as HTMLSelectElement).value })))
 ```
 
 Refresh the page or open the current URL in a new tab to see the localStorage in action. Your last filters will be populated on load.
 
 
 ## Click Events
-Measure, dimension, and link clicks are tracked on click. With Javacript event we can capture the event, with the Embed SDK, we can capture and CANCEL the click.
+Measure, dimension, and link clicks are tracked on click. With Javacript events we can capture the event, with the Embed SDK, we can capture and CANCEL the click.
 ### Capture Drill Menu Clicks
 
 Create a function at the end of demo.ts
@@ -45,19 +45,19 @@ Create a function at the end of demo.ts
 Currently drill menu clicks don't fire with Dashboards Next (but will soon), so comment out the `.withNext()` line.
 
 ```js
-async function drillClick ( event: any) {
+  function drillClick ( event: any) {
   console.log('drillmenu:click', event)
   return {cancel: false}
 }
 ```
 
-listen to drillmenu:click
+listen to drillmenu:click by placing this within the EmbedSDK:
 
 ```
 .on('drillmenu:click', drillClick)
 ```
 
-When we click around on the dashboard we start to see the event come through. Here's an example:
+When we click around on the dashboard we start to see the event come through in our console. Here's an example:
 
 
 ```js
@@ -74,22 +74,19 @@ When we click around on the dashboard we start to see the event come through. He
 
 ### Cancelling Clicks
 
-Notice the return.. click events require you to return an object with whether or not to cancel the click. We left it off
-
-Cancel all drill menu clicks
+The drillclick function has a return of `cancel:false`, this means the clicks will always go through. You can change this to cancel all clicks on the dashboard. In the drillclick function change the return to this:
 
 ```js
 return {cancel: true}
 ```
-
-Notice this doesn't stop the dropdown menu from appearing, but will prevent the automatic drills + clicks from within the menu.
+After clicking around on the dashboard, when we click on charts the modal never pops up. Notice this doesn't stop the dropdown menu from appearing, but will prevent the automatic drills + clicks from within the menu.
 
 ### Advanced click interactions
 
-Open an explore page instead of drill modal underneith the dashboard. Replace the `drillMenu()` function with the following:
+In this example we will open an Explore page underneath the dashboard. Replace the `drillClick()` function with the following, and click on Total Sale Price (This Period) in the line chart:
 
 ```js
-async function drillClick ( event: any) {
+  function drillClick ( event: any) {
   console.log('drillmenu:click', event)
   if (event && event.modal) {
     const dashboard_div = document.getElementById('dashboard')
@@ -99,7 +96,7 @@ async function drillClick ( event: any) {
     LookerEmbedSDK
     .createExploreWithUrl(`https://${looker_host}${event.url}`)
     .appendTo('#dashboard')
-    .withId('cool')
+    .withClassName('looker-embed')
     .build()
     .connect()
     .then()
@@ -112,16 +109,16 @@ async function drillClick ( event: any) {
   }
 }
 ```
-Instead of a drillmenu:click opening in theparent page; we have the explore page open instead.
+Instead of the modal opening in the iframe, we have the explore page open at the bottom of the page instead. We did this by creating a new iframe with the data from the click.
 
-If we want to not do the explore but just a `/query`
+If we want to have a table but not the full Explore page, we can change `/explore` to  `/query`. Find the `.createExploreWithUrl` and replace it with the following:
 
 
 ```
 .createExploreWithUrl(`https://${looker_host}${event.url.replace('/explore/','/query/')}`)
 ```
 
-Instead of using an iframe, can we make make an API call and populate a table instead?
+Instead of using an iframe, can we make make an API call and populate a table instead. Replace the drillClick function with all of this:
 
 ```js
 function drillClick ( event: any) {
@@ -142,13 +139,13 @@ function drillClick ( event: any) {
       })
       console.log(query_params)
       console.log('Click URL', url)
-      sdk.run_url_encoded_query(path_split[3], path_split[4], 'csv', query_params)
+      sdk.get(`/queries/models/${path_split[3]}/views/${path_split[4]}/run/csv${url.search}`)
       .then((data: any) => {
         var rows = data.value.split('\n'),
         table = document.createElement('table'),
         tr = null, td = null,
         tds = null;
-      
+
         table.className = "ui celled table"
 
         for ( var i = 0; i < rows.length; i++ ) {
@@ -171,13 +168,13 @@ function drillClick ( event: any) {
 }
 ```
 
-How would you do unlimited rows in this table?
+How would you do unlimited rows in this table? Replace `sdk.get` with the following:
 
 ```
-query_params['limit'] = "-1"
+sdk.get(`/queries/models/${path_split[3]}/views/${path_split[4]}/run/csv${url.search}&limit=-1`)
 ```
 
-You could try to other things like move this into a pop-up modal...
+This is just an example of drillClick putting data into other parts of the application. There are many other use cases you might want to do this with.
 
 ### Create as dashboard dropdown
 
@@ -194,7 +191,7 @@ insert a new dropdown in `index.html`. Starting on line 49 insert the new dropdo
       </div>
 ```
 
-Starting on line 77 insert a new function to handle the dropdown clicks
+Within the <script> tag at the bottom of the page, insert this after the new function to handle the dropdown clicks
 
 ```js
     $('#select-dashboard')
@@ -211,7 +208,7 @@ Place this function at the bottom of `demo.ts`
 async function addDashboardOptions () {
   const dashboard_dropdown_parent = document.getElementById('select-dashboard')
   if (dashboard_dropdown_parent) {
-    dashboard_dropdown_parent.addEventListener('change', (event: any) => { 
+    dashboard_dropdown_parent.addEventListener('change', (event: any) => {
       const dashboard_div = document.getElementById('dashboard')
       if (dashboard_div) {
         dashboard_div.firstChild!.remove()
@@ -248,7 +245,7 @@ You'll also need to update the first line of the `embedSdkInit` function. Replac
 function embedSdkInit ( dashboard_id: any ) {
 ```
 
-At the top of the file, replace line XX with 
+At the top of the file, replace line XX with
 
 ```js
 document.addEventListener('DOMContentLoaded', ()=>embedSdkInit(dashboard_id))

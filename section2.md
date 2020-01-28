@@ -81,7 +81,7 @@ Let's break down whats happening:
 1. When your dashboard loads, the `setupDashboard` function runs.
 2. In this function, we find the element responsible for changing the dropdown, `select-dropdown`, and save it as a variable `dropdown`
 3. When we find it, we add a listener to it; every time the value changes, we then perform an action.
-4. The action we perform is to run `dashboard.updateFilters()`, the Embed SDK function provided to us to facilitate communication to the iframe. Much easier than writing your own [postMessage() event](https://docs.looker.com/reference/embedding/embed-javascript-events#posting_the_request_to_the_iframes_contentwindow_property)
+4. The action we perform is to run `dashboard.updateFilters()`, the Embed SDK function provided to us to facilitate communication to the iframe.  Much easier than writing your own [postMessage() event](https://docs.looker.com/reference/embedding/embed-javascript-events#posting_the_request_to_the_iframes_contentwindow_property).
 5. We send a JSON object of the filters we want to apply; we don't need to give all of them, just the ones we want to change. The iframe responds only to the values we've placed in the JSON object; notice how our other filters don't change
 
 It would be nice if we didn't have to hit the run button so much - for a dropdown like this, we can run right after we've selected it. On line XX, within the `dropdown.addEventListener(...{...})`, after the `dashboard.updateFilters` line, insert a new line and paste `dashboard.run()`
@@ -127,7 +127,7 @@ The `page:properties:changed` event looks like this:
 }
 ```
 
-First let's add a new function at the bottom of `demo.ts` that will listen to the event and apply the change to the height of the element that contains the iframe.
+First let's add a new function at the bottom of `demo.ts` that will listen to the event and apply the change to the height of the element that contains the iframe:
 
 ```
 function changeHeight( event: any ) {
@@ -139,7 +139,7 @@ function changeHeight( event: any ) {
 }
 ```
 
-We'll get a little bit of a buffer by adding `15` pixels.
+We'll get a little bit of a buffer by adding 15 pixels.
 
 Then within the Embed SDK code (still in our `demo.ts` file) we need to tell it to perform the function below when it receives the `page:properties:changed` event. Copy and paste this function on its own line above `.build()`:
 

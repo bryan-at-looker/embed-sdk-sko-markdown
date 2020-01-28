@@ -25,7 +25,7 @@ function loadEvent (event: any) {
 }
 ```
 
-Call the function when you see the load
+Call the function when you see the load (in EmbedSDK)
 
 ```js
 .on('dashboard:loaded', loadEvent)
@@ -37,18 +37,18 @@ If you look at your console (Command+Option+J) you will see the options that are
 ```js
 {
   "layouts": [
-  	{
-  	  "id": 5,
-  	  "dashboard_layout_components": [...],
-  	  ...
-  	}
+    {
+      "id": 5,
+      "dashboard_layout_components": [...],
+      ...
+    }
   ],
   "elements": {
-  	"36": {
-  	  "title": "Total Gross Margin",
-	  "vis_config": {...} 	  
-  	},
-  	...
+    "36": {
+      "title": "Total Gross Margin",
+    "vis_config": {...}
+    },
+    ...
   }
 }
 ```
@@ -85,7 +85,7 @@ function changeTitles(elements: any, state: string) {
 
 This function will loop through all the element keys and update the titles in each element. Single tile visualizations and other chart types have different title structures for display, so we have an if statement that updates the correct title for us. Once we've updated them all, we use our EmbedSDK variable, gDashboard to set the options to tell Looker to update; alternatively you could do this manually the old way with [Javascript Events](https://docs.looker.com/reference/embedding/embed-javascript-events#dashboard:options:set).
 
-Now lets call this function where it makes most sense, the place where we listened for the dropdown change and updated the dashboard filters. Within the `setupDashboard function`, right after `dashboard.run()` you add the follow.
+Now lets call this function where it makes most sense, the place where we listened for the dropdown change and updated the dashboard filters. Within the `setupDashboard function`, right after `dashboard.run()` you add the following:
 
 ```js
     changeTitles(gOptions.elements,(event.target as HTMLSelectElement).value)
@@ -93,7 +93,7 @@ Now lets call this function where it makes most sense, the place where we listen
 
 In the case above we're both updating the visualization configuration and running at the dashboard so theres a reload. But the dashboard doesn't have to reload to set options. Lets take an example where we will change all of our visualizations to tables by clicking a button.
 
-First lets create a function that accepts an input of the element we clicked on. Place this at the bottom of `demo.ts`
+First lets create a function that accepts an input of the element we clicked on. Place this at the bottom of `demo.ts`:
 
 ```js
 function tableChange(table_icon: HTMLElement) {
@@ -126,7 +126,7 @@ Now we need to call this function and pass it an HTML element for the button we'
 ```js
   const table_icon = document.getElementById('table-swap')
   if (table_icon) {
-    table_icon.addEventListener('click', () => { 
+    table_icon.addEventListener('click', () => {
       tableChange(table_icon)
     })
   }
@@ -137,31 +137,45 @@ Click the table swap button to see the the dynamic dashboard control in action
 ![Table Swap](./images/section5-table-swap-icon.png)
 
 
-**Bonus:** Don't change the single value visualizations; wrap a condition to check for `looker_grid`
+**Bonus:** Don't change the single value visualizations; wrap a condition to check for `looker_grid`. At the bottom of your `demo.ts` file replace the entire `function tableChange` with this:
 
-```js
-  if (new_elements[element].vis_config.type !== 'single_value' ) {
-    new_elements[element].vis_config.type = 'looker_grid'
+```
+function tableChange(table_icon: HTMLElement) {
+  let new_elements = JSON.parse(JSON.stringify(gOptions.elements))
+  const to_table = ( table_icon.getAttribute('data-value') == '0' ) ? true : false
+  table_icon.classList.remove((to_table) ? 'black' : 'violet')
+  table_icon.classList.add((to_table) ? 'violet' : 'black')
+  table_icon.setAttribute('data-value', (to_table) ? '1': '0')
+  if (to_table) {
+    Object.keys(new_elements).forEach(element => {
+      if (new_elements[element].vis_config.type !== 'single_value' ) {
+        new_elements[element].vis_config.type = 'looker_grid'
+      }
+    })
+    gDashboard.setOptions({ elements: new_elements})
+  } else {
+    gDashboard.setOptions({ elements: gOptions.elements })
   }
+}
 ```
 
 ### Vis Swap
 
 ![Vis Swap](https://raw.githubusercontent.com/bryan-at-looker/embed-sdk-sko-markdown/master/images/section5-donut-swap.gif?raw=true)
 
-Lets find a very specific tile and have a control that only updates that one tile. There may be situationas where your embedding customer would like to be able to change configuration options on the fly. For example, changing the visualization type, hiding certain fields, or re-calculating a goal line. In this example, we will create a button that lets you toggle a donut on and off, but any visualization configuration is available to change. 
+Lets find a very specific tile and have a control that only updates that one tile. There may be situations where your embedding customer would like to be able to change configuration options on the fly. For example, changing the visualization type, hiding certain fields, or re-calculating a goal line. In this example, we will create a button that lets you toggle a donut on and off, but any visualization configuration is available to change.
 
-We need to figure out which element we want to swap the visualization configuration on. We've been logging the options for dynamic dashboard control, so lets poke around in our console (Command+Shift+J) in there to find the Active Users tile that is of visualization type `looker_donut_multiples`.
+We need to figure out which element we want to swap the visualization configuration on. We've been logging the options for dynamic dashboard control, so lets poke around in our console (Command+Option+J) in there to find the Active Users tile that is of visualization type `looker_donut_multiples`.
 
 ```js
-{ 
+{
   ...,
   "42": {
   "title": "Active Users",
   "title_hidden": false,
   "vis_config": {
     "type": "looker_donut_multiples",
-  	...,
+    ...,
     "title": "Active Users"
   },
   ...,
@@ -177,7 +191,7 @@ export const new_vis_config = {
 }
 ```
 
-Import in `demo.ts` at the top with the other imports.
+Import in `demo.ts` at the top with the other imports:
 
 
 ```js
@@ -204,13 +218,13 @@ function swapVisConfig( icon: HTMLElement ) {
       gDashboard.setOptions({ elements: gOptions.elements })
     }
   }
-} 
+}
 ```
 The function above does the following.
 1. Flips the color of the icon after click
 2. Flips the value associated to the icon (we are using this to track state)
 3. Uses the value to determine if we are swapping from or to the original vis config
-4. After applying the visualization options, we use `.setOptions()` through the `element` object. 
+4. After applying the visualization options, we use `.setOptions()` through the `element` object.
 
 
 The last piece is to call function to swap when the click; in `demo.ts` at the end of setupDashboard function, place this
@@ -218,7 +232,7 @@ The last piece is to call function to swap when the click; in `demo.ts` at the e
 ```js
   const donut_icon = document.getElementById('vis-swap')
   if (donut_icon) {
-    donut_icon.addEventListener('click', () => { 
+    donut_icon.addEventListener('click', () => {
       swapVisConfig(donut_icon)
     })
   }
@@ -257,7 +271,7 @@ function layoutFilter(filter: any) {
   const elements = copy_options.elements || {}
   const layout = copy_options.layouts[0]
   let components = (layout.dashboard_layout_components) ? layout.dashboard_layout_components : []
-  
+
   const new_components: any = []
   filter = filter.split(',')
 
@@ -265,14 +279,14 @@ function layoutFilter(filter: any) {
     const found = elements[c.dashboard_element_id]
     if (filter.indexOf(found.title) > -1 ) {
       new_components.push(c)
-    } 
+    }
   })
   layout.dashboard_layout_components = new_components
   gDashboard.setOptions({ layouts: [layout] })
 }
 ```
 
-The above function 
+The above function
 1. Creates copies of the elements and layout/components so it can update it seperately from the default
 2. Loops through each component on the dashboard
 3. If the title of the tile matches whats been selected in the KPI filters, it keeps the layout the same, if the tile's title does not match a filter selection, then it removes the layout component.

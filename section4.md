@@ -111,7 +111,7 @@ function addStateOptions(data: any) {
 }
 ```
 
-### Keep dashboard filters in sync with API calls
+### Dropdown list powered by dashboard filter
 
 30 days drpdown
 ![30 days](./images/section5-state-top10-30days.png)

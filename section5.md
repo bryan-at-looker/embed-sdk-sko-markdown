@@ -301,7 +301,7 @@ call function in `demo.ts` at the end of filtersUpdate function, after `loadingI
 
 
 
-### have one KPI on load
+### Have one KPI on load
 
 In `demo.ts`, at the end of loadEvent function place these lines of code, it will send the KPIs filter to the function so it can hide them.
 

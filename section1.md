@@ -33,11 +33,9 @@ The Embed SDK uses `dotenv` a common Node package that will look for a `.env` an
 
 In short, we use environment variables as a way to configure the server to store necessary information **on startup** like the host name and API credentials.
 
-Head over to the SKO instance, [https://sko2020.dev.looker.com/admin/users](https://sko2020.dev.looker.com/admin/users), and create your API 3 keys
+Head over to the SKO instance, [https://sko2020.dev.looker.com/admin/users](https://sko2020.dev.looker.com/admin/users), and create your API 3 keys.  Navigate to your .env and fill in your API id and secret in `LOOKERSDK_CLIENT_ID`, `LOOKESDK_CLIENT_SECRET`.
 
-Navigate to your .env and fill in your API id and secret in `LOOKERSDK_CLIENT_ID`, `LOOKESDK_CLIENT_SECRET`. If you don't have API credentials yet, log into your Looker instance and follow the directions [here](https://docs.looker.com/admin-options/settings/users#api3_keys).
-
-Now that the .env is configured, lets start up the server.  Note that you will see error messages when `npm install` runs.  This is expected and will be fixed with the subsequent `awk` command.
+Now that the .env is configured, lets start up the server.  Note that you will see error messages when `npm install` runs.  This is expected and will be fixed with the subsequent `awk` command. Run the following commands in your VS Code in the integrated terminal.
 
 ```
 npm install

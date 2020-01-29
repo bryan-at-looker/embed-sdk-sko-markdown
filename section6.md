@@ -251,9 +251,11 @@ At the top of the file, replace `document.addEventListener` with:
 document.addEventListener('DOMContentLoaded', ()=>embedSdkInit(dashboard_id))
 ```
 
-Now include this function within the `setupDashboard` const:
+Now include this function within the `setupDashboard` const (at the end):
 
-`addDashboardOptions()`
+```js
+addDashboardOptions()
+```
 
 ### Use local storage for remembering dashboard
 

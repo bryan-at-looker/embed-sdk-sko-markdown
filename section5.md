@@ -188,7 +188,7 @@ We need to figure out which element we want to swap the visualization configurat
 }
 ```
 
-The dashboard_element_id we want to swap is 42, lets create a couple variables in `demo.ts` to help us swap in demo_config.ts
+The dashboard_element_id we want to swap is 42, lets create a couple variables in in demo_config.ts
 
 ```js
 export const swap_element = "42"

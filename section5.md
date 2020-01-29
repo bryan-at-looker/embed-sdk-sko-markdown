@@ -63,7 +63,7 @@ The first thing we will try to change is every title on all the tiles.  When we'
 
 So let's create a function that will update the charts and graph tiles
 
-![title change](./images/section5-title-changer.gif)
+![title change](https://bryan-at-looker.s3.amazonaws.com/images/embed-sdk-sso/section5-title-changer.gif)
 
 Add this at the bottom of `demo.ts`
 
@@ -143,7 +143,7 @@ You'll notice that when you mouse over the table icon in upper right, the cursor
         <i id="table-swap" data-value="0" style="cursor: pointer;" class="big table icon violet"></i>
 ```
 
-![Table Swap](./images/section5-table-swap-icon.png)
+![Table Swap](https://bryan-at-looker.s3.amazonaws.com/images/embed-sdk-sso/section5-table-swap-icon.png)
 
 
 **Bonus:** Don't change the single value visualizations; wrap a condition to check for `looker_grid`. At the bottom of your `demo.ts` file replace the entire `function tableChange` with this:
@@ -170,7 +170,7 @@ function tableChange(table_icon: HTMLElement) {
 
 ### Vis Swap
 
-![Vis Swap](https://raw.githubusercontent.com/bryan-at-looker/embed-sdk-sko-markdown/master/images/section5-donut-swap.gif?raw=true)
+![Vis Swap](https://bryan-at-looker.s3.amazonaws.com/images/embed-sdk-sso/section5-donut-swap.gif)
 
 Lets find a very specific tile and have a control that only updates that one tile. There may be situations where your embedding customer would like to be able to change configuration options on the fly. For example, changing the visualization type, hiding certain fields, or re-calculating a goal line. In this example, we will create a button that lets you toggle a donut on and off, but any visualization configuration is available to change.
 
@@ -248,7 +248,7 @@ In `demo.ts` at the end of setupDashboard function, place this
 ```
 
 This listens for when the donut icon is clicked, then runs the `swapVisConfig()` function.
-![Donut Swap](./images/section5-donut-swap-icon.png)
+![Donut Swap](https://bryan-at-looker.s3.amazonaws.com/images/embed-sdk-sso/section5-donut-swap-icon.png)
 
 ### Layout
 

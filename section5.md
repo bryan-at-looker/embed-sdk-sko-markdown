@@ -320,7 +320,7 @@ In `demo.ts`, at the end of loadEvent function place these lines of code, it wil
   }
 ```
 
-Then place a default filter for the KPI field where in instantiate the Embed SDK. Replace the current `.wiltFilters()` with this.
+Then place a default filter for the KPI field where it instantiate the Embed SDK. Replace the current `.wiltFilters()` with this.
 
 ```js
   .withFilters({

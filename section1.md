@@ -113,10 +113,10 @@ And now we have a normal-sized dashboard :party:
 
 Lets walkthrough what exactly is happening to make this work:
 
-1. In `demo/demo.ts` on line XX, you can see `LookerEmbedSDK.init(lookerHost, '/auth')`. This tells the Embed SDK that I'm going to use the looker_host variable from `demo_config.ts` and the `/auth` API endpoint to generate an SSO embed URL
-2. Then on line XX, `LookerEmbedSDK.createDashboardWithId(dashboardId)` is the start of the Embed SDK where we instantiate a dashboard via the dashboardId variable from `demo/demo_config.ts`.
+1. In `demo/demo.ts` you can see `LookerEmbedSDK.init(lookerHost, '/auth')`. This tells the Embed SDK that I'm going to use the looker_host variable from `demo_config.ts` and the `/auth` API endpoint to generate an SSO embed URL
+2. Then `LookerEmbedSDK.createDashboardWithId(dashboardId)` is the start of the Embed SDK where we instantiate a dashboard via the dashboardId variable from `demo/demo_config.ts`.
 3. The `.build()` and  `.connect()` methods take the dashboardId and lookerHost and send to the `/auth` endpoint to generate the SSO embed URL.
-4. The `/auth` endpoint is on a server that's running on your laptop that simulates a backend service your customers may have in production. We send a request to the backend asking for an SSO embed URL; you can find it in `webpack-devserver.config.js` on line XX.
+4. The `/auth` endpoint is on a server that's running on your laptop that simulates a backend service your customers may have in production. We send a request to the backend asking for an SSO embed URL; you can find it in `webpack-devserver.config.js`.
 5. This endpoint receives the generated URL from the Embed SDK  (`/embed/dashboards/5?embed_doman=...`) and the host from `demo/demo_config.ts` and the user from `demo/demo_user.json` and passes it to a function called `createSignedUrl()`
 6. `createSignedUrl()` can be found in `auth_utils/auth_utils.js` and uses our new Typescript/JS SDK to create an API session and create the signed embed URL to send back to the browser. The new JS SDK will log us in automatically using the environment variables we placed in `.env`; all that's needed after setup is `const sso_obj = await sdk.ok(sdk.create_sso_embed_url(sso_url_params))`. But wait!  We're using the API for this?  More on this in Section 4. No more embed secret resets?!
 7. The signed URL will then be put into the `src` property of an iframe. By having the line `.appendTo('#dashboard')`, the iframe will placed in the element with an id of `dashboard`; `<div id="dashboard"></div>`.

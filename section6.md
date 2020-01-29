@@ -12,7 +12,7 @@ Set at the end of filtersUpdates in `demo.ts` file:
   }
 ```
 
-set this right before the EmbedSDK instantiation (after const logo =):
+In `demo.ts` place the below code in the EmbedSDK instantiation function after `const logo = document.getElementById('logo')`:
 
 ```
 const last_filters = JSON.parse(localStorage.getItem('dashboard_filters') || '{}');
@@ -42,7 +42,7 @@ Create a function at the end of demo.ts
 
 **NOTE:**
 
-Currently drill menu clicks don't fire with Dashboards Next (but will soon), so comment out the `.withNext()` line.
+Currently drill menu clicks don't fire with Dashboards Next (but will soon), so comment out the `.withNext()` line in the embedSdkInit function. Place the below function at the bottom of demo.ts.
 
 ```js
   function drillClick ( event: any) {

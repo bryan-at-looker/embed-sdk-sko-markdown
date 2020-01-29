@@ -1,5 +1,8 @@
 
-# Section 3: Software Engineers and iframe Interactions
+# Section 3: Faster PBL Technical Wins with Engineers
+
+**Note:**
+If you would like to start this section over at any time, you can run `git reset --hard`. If you would like to see what the files at the end of this section look like, you can check out the [Github here](https://github.com/bryan-at-looker/embed-sdk-sko/tree/section4)
 
 In Section 1 we talked about not using the embed secret, well why not? Wait a minute, we are embedding without the embed secret, what gives? We don't need to specify it any longer, but it is still used! As of Looker 6.22 the API allows for creating an SSO URL:  the API fecthes the signed URL for the iframe.  This URL is the same as if you'd used the secret with the old process.  Note that this requires an API user with admin privileges [Create SSO Embed URL](https://docs.looker.com/reference/api-and-integration/api-reference/v3.1/auth#create_sso_embed_url)
 

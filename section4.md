@@ -1,5 +1,8 @@
 # Section 4: API Introductions
 
+**Note:**
+If you would like to start this section over at any time, you can run `git reset --hard`. If you would like to see what the files at the end of this section look like, you can check out the [Github here](https://github.com/bryan-at-looker/embed-sdk-sko/tree/section4end)
+
 Remove the options from your dropdown in the HTML (in `index.html`). You're going to want to remove several lines of code starting after `<select id="select-dropdown">` and before `</select>`; you will be removing all the options. Paste the below into that spot you just removed.
 
 ```

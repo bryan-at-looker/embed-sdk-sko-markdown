@@ -3,6 +3,9 @@
 
 # Section 2: Product Manager and Designer Basics
 
+**Note:**
+If you would like to start this section over at any time, you can run `git reset --hard`. If you would like to see what the files at the end of this section look like, you can check out the [Github here](https://github.com/bryan-at-looker/embed-sdk-sko/tree/section3)
+
 ### Default filters on load:
 
 Add this to `demo_config.ts` at the bottom:

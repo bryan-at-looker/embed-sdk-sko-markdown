@@ -297,7 +297,7 @@ The above function
 2. Loops through each component on the dashboard
 3. If the title of the tile matches whats been selected in the KPI filters, it keeps the layout the same, if the tile's title does not match a filter selection, then it removes the layout component.
 
-call function in `demo.ts` at the end of filtersUpdate function, after `loadingIcon(false)`, we want to add this call.
+In `demo.ts` at the end of filtersUpdate function, after `loadingIcon(false)`, we want to add this call.
 
 ```js
   if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {

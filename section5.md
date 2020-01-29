@@ -169,9 +169,9 @@ function tableChange(table_icon: HTMLElement) {
 
 ![Vis Swap](https://raw.githubusercontent.com/bryan-at-looker/embed-sdk-sko-markdown/master/images/section5-donut-swap.gif?raw=true)
 
-Lets find a very specific tile and have a control that only updates that one tile. There may be situations where your embedding customer would like to be able to change configuration options on the fly. For example, changing the visualization type, hiding certain fields, or re-calculating a goal line. In this example, we will create a button that lets you toggle a donut on and off, but any visualization configuration is available to change.
+Let's find a very specific tile and have a control that only updates that one tile. There may be situations where your embedding customer would like to be able to change configuration options on the fly. For example, changing the visualization type, hiding certain fields, or re-calculating a goal line. In this example, we will create a button that lets you toggle a donut on and off, but any visualization configuration is available to change.
 
-We need to figure out which element we want to swap the visualization configuration on. We've been logging the options for dynamic dashboard control, so lets poke around in our console (Command+Option+J) in there to find the Active Users tile that is of visualization type `looker_donut_multiples`.
+We need to figure out which element we want to swap the visualization configuration on. We've been logging the options for dynamic dashboard control, so let's poke around in our JavaScript console (Command+Option+J) to find the Active Users tile that is of visualization type `looker_donut_multiples`.
 
 ```js
 {
@@ -188,7 +188,7 @@ We need to figure out which element we want to swap the visualization configurat
 }
 ```
 
-The dashboard_element_id we want to swap is 42, lets create a couple variables in `demo.ts` to help us swap in demo_config.ts
+The dashboard_element_id we want to swap is 42, so create a couple variables in `demo.ts` to help us swap in demo_config.ts
 
 ```js
 export const swap_element = "42"
@@ -255,7 +255,7 @@ In `demo_config.ts`, switch to a dashboard with a new set of filters
 export const dashboard_id = 6
 ```
 
-*Note:* We're switching dashboards; if you want to keep your vis swap you have to change `swap_element` variable to `51`.
+*Note:* We're switching dashboards; if you want to keep the vis swap you have to change `swap_element` variable to `51`.
 
 In `demo_config.ts` create an object that listens to the KPIs filter object, this is the Filter Name you see on the dashboard. It currently doensn't control any queries at all, its just a dummy filter.
 
@@ -263,7 +263,7 @@ In `demo_config.ts` create an object that listens to the KPIs filter object, thi
 export const dashbord_layout_filter = 'KPIs'
 ```
 
-in `demo.ts` import the variable at the top near the other imports
+In `demo.ts` import the variable at the top near the other imports
 
 ```js
 import { dashbord_layout_filter } from './demo_config'
@@ -293,11 +293,11 @@ function layoutFilter(filter: any) {
 ```
 
 The above function
-1. Creates copies of the elements and layout/components so it can update it seperately from the default
+1. Creates copies of the elements and layout/components so they can be updated seperately from the default
 2. Loops through each component on the dashboard
-3. If the title of the tile matches whats been selected in the KPI filters, it keeps the layout the same, if the tile's title does not match a filter selection, then it removes the layout component.
+3. If the title of the tile matches what's been selected in the KPI filters, it keeps the layout the same; if the tile's title does not match a filter selection, then it removes the layout component.
 
-call function in `demo.ts` at the end of filtersUpdate function, after `loadingIcon(false)`, we want to add this call.
+Call our function in `demo.ts` at the end of `filtersUpdate()` function, after `loadingIcon(false)`, we want to add this call.
 
 ```js
   if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {
@@ -305,9 +305,9 @@ call function in `demo.ts` at the end of filtersUpdate function, after `loadingI
   }
 ```
 
+Try it!
 
-
-### Have one KPI on load
+### Have one KPI on dashboard load
 
 In `demo.ts`, at the end of loadEvent function place these lines of code, it will send the KPIs filter to the function so it can hide them.
 

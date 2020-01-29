@@ -9,7 +9,7 @@ Move to your terminal and we're going to clone a different repository based off 
 ```
 git clone https://github.com/bryan-at-looker/embed-sdk-sko
 cd embed-sdk-sko
-git checkout section0
+git checkout section1
 code .
 ```
 

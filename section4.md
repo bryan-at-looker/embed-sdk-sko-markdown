@@ -50,7 +50,7 @@ function addStateOptions(data: any) {
 }
 ```
 
-We have to get the list of states so let's run an API call that grabs all states and passes it to our new function.  We want to run this after the dashboard loads, so place it after our first API call `sdk.me()` within the function `setupDashboard(...)`
+We have to get the list of states so let's run an API call that grabs all states and passes it to our new function.  We want to run this after the dashboard loads, so place it on a new line after `const me = await sdk.ok(sdk.me())` within the function `setupDashboard(...)`
 
 ```js
   const states = await sdk.ok(sdk.run_inline_query(
@@ -62,7 +62,7 @@ We have to get the list of states so let's run an API call that grabs all states
   addStateOptions(states)
 ```
 
-Now check the dropdown - we've got a nice long list of states and locales in other countries; let's narrow that down to U.S. states. Move to `demo_user.json` and give the user a country user attribute like this:
+Now check the dropdown - we've got a nice long list of states and locales in other countries; let's narrow that down to U.S. states. Move to `demo_user.json` and give the user a country user attribute similar to what you see coded below. This is another server side change, so in this case you need to go to your terminal and Control+C to exit the server and then `npm start` after updating the user attribute.
 
 ```
   "user_attributes": {
@@ -70,8 +70,6 @@ Now check the dropdown - we've got a nice long list of states and locales in oth
     "country": "USA"
   }
 ```
-
-This is another server side change, so in this case you need to go to your terminal and Control+C to exit the server and then `npm start`.
 
 Check your dropdown, you should see just the U.S. states. Remember, we've setup the Embed SDK to make API calls only as that user - we can now keep everything in sync from model to iframe to API calls.
 

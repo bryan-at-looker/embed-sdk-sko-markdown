@@ -233,7 +233,7 @@ The function above does the following.
 4. After applying the visualization options, we use `.setOptions()` through the `element` object.
 
 
-The last piece is to call function to swap when the click; in `demo.ts` at the end of setupDashboard function, place this
+In `demo.ts` at the end of setupDashboard function, place this
 
 ```js
   const donut_icon = document.getElementById('vis-swap')

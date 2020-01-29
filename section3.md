@@ -9,8 +9,8 @@ Typically in the deal cycle we would mention the API in three main areas
 2. Building custom applications and data products with consistent metrics
 3. Providing a scalable governance layer with row level security
 
-Thus far, we've just used the Embed SDK, but not the API.  So let's setup the demo environment to get ready for making API calls in the browser. In `demo.ts` starting at line XX import our new typescipt/javascript SDK:
 
+Thus far, we've just used the Embed SDK, but not the API.  So let's setup the demo environment to get ready for making API calls in the browser. In `demo.ts`, at the top of the file, lets import our new typescipt/javascript SDK:
 
 ```
 import { LookerSDK, IApiSettings, AuthToken, IError, CorsSession } from '@looker/sdk'

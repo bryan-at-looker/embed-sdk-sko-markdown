@@ -107,7 +107,7 @@ This will now change the filter and run the dashboard everytime the dropdown val
 
 Another common ask is to make sure that multiple scrollbars don't appear:  one within the iframe and one on the parent page (you may not see this in your example right now depending on the size of your browser window relative to the size of the iframe)
 
-![HTML height](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section2-height-scroll-before.png?raw=true)
+![HTML height](https://bryan-at-looker.s3.amazonaws.com/images/embed-sdk-sso/section2-height-scroll-before.png)
 
 In order to do this, we need to listen to metadata that Looker is sending out to the parent page through Javascript events. The `page:properties:changed` event ([docs](https://docs.looker.com/reference/embedding/embed-javascript-events#page:properties:changed)) gives us the ability to listen to the height of the Looker iframe and then we can dynamically change the style of the parent `div, #dashboard`.
 
@@ -152,7 +152,7 @@ Then within the Embed SDK code (still in our `demo.ts` file) we need to tell it 
 
 
 
-![HTML height](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section2-height-html.png?raw=true)
+![HTML height](https://bryan-at-looker.s3.amazonaws.com/images/embed-sdk-sso/section2-height-html.png?raw=true)
 
 The scroll bar is now on the outer page and not in the iframe, it feels more native and prevents the "multiple scroll bar problem".
-![HTML height](https://github.com/bryan-at-looker/embed-sdk-sko-markdown/blob/master/images/section2-height-scroll-after.png?raw=true)
+![HTML height](https://bryan-at-looker.s3.amazonaws.com/images/embed-sdk-sso/section2-height-scroll-after.png)

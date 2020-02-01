@@ -1,7 +1,7 @@
 # Section 6: Advanced Interactions
 
 **Note:**
-If you would like to start this section over at any time, you can run `git reset --hard`. If you would like to see what the files at the end of this section look like, you can check out the [Github here](https://github.com/bryan-at-looker/embed-sdk-sko/tree/section6end)
+If you would like to fast forward to the beginning of this section you can `git checkout section6 --force`. If you would like to start this section over at any time, you can run `git reset --hard`. If you would like to see what the files at the end of this section look like, you can check out the [Github here](https://github.com/bryan-at-looker/embed-sdk-sko/tree/section6end)
 
 ### Saving dashboard filters using localstorage
 

@@ -6,7 +6,7 @@ If you would like to start this section over at any time, you can run `git reset
 Pull in new skin: This will blow away anything you haven't saved.  From your Terminal window, Control+C, then type:
 
 ```
-git checkout re-skinner --force
+git checkout section5 --force
 ```
 
 Now restart your server with 'npm start'

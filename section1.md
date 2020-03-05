@@ -130,7 +130,7 @@ There is one other configuration piece:  who this user is and what attributes to
 
 ```json
 {
-  "external_user_id": "",
+  "external_user_id": "replace-this",
   "first_name": "First Name",
   "last_name": "Last Name",
   "session_length": 3600,
